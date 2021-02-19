@@ -1,10 +1,10 @@
 package com.hacker.programblock;
 
-import javax.tools.*;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import javax.tools.JavaCompiler;
+import javax.tools.StandardLocation;
+import javax.tools.ToolProvider;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class Compiler {
     private static MemoryClassLoader classLoader;
@@ -13,11 +13,6 @@ public class Compiler {
     private static boolean inited = false;
 
     public static Class<?> compile(String packageName, String className, CharSequence sourceCode) throws Exception {
-        List<String> ops = new ArrayList<>();
-        ops.add("-source");
-        ops.add("1.8");
-        ops.add("-target");
-        ops.add("1.8");
         if (!inited) {
             compiler = ToolProvider.getSystemJavaCompiler();
             classLoader = new MemoryClassLoader(Thread.currentThread().getContextClassLoader());
@@ -26,7 +21,7 @@ public class Compiler {
         }
         MemoryJavaFileObject file = new MemoryJavaFileObject(className, sourceCode);
         fileManager.addJavaFileObject(StandardLocation.SOURCE_PATH, packageName, className + ".java", file);
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, ops, null, Collections.singletonList(file));
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Collections.singletonList(file));
         task.call();
         return classLoader.loadClass(packageName + "." + className);
     }

@@ -1,0 +1,7 @@
+{
+  "package": "com.hacker.programblock.mixin",
+  "refmap": "programblock.refmap.json",
+  "minVersion": "0.8",
+  "mixins": [
+  ]
+}

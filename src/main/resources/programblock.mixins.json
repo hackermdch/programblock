@@ -1,7 +1,11 @@
 {
   "package": "com.hacker.programblock.mixin",
   "refmap": "programblock.refmap.json",
+  "plugin": "com.hacker.programblock.MixinPlugin",
   "minVersion": "0.8",
   "mixins": [
+    "accessor.AbstractBlockAccessor",
+    "accessor.EntityAccessor",
+    "accessor.WorldAccessor"
   ]
 }

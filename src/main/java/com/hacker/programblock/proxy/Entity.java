@@ -32,15 +32,21 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-public class Entity {
+public class Entity implements IProxy<net.minecraft.entity.Entity> {
     private final net.minecraft.entity.Entity target;
 
-    public Entity(net.minecraft.entity.Entity target) {
-        this.target = target;
+    public Entity(@Nonnull net.minecraft.entity.Entity target) {
+        this.target = Objects.requireNonNull(target);
+    }
+
+    public net.minecraft.entity.Entity getTarget() {
+        return target;
     }
 
     public boolean func_242278_a(BlockPos p_242278_1_, BlockState p_242278_2_) {

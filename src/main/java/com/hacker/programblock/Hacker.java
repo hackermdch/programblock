@@ -3,11 +3,12 @@ package com.hacker.programblock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.OperatorOnlyItem;
 import net.minecraft.item.Rarity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -20,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod(Hacker.MOD_ID)
 public class Hacker {
     public final static String MOD_ID = "programblock";
+    private static Rarity gold = Rarity.create("program_block", TextFormatting.GOLD);
     public static MinecraftServer server;
     static String SOURCE_CODE =
             "package com.hacker.dy;" +
@@ -35,7 +37,7 @@ public class Hacker {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
     public static final RegistryObject<Block> programblock = BLOCKS.register("program_block", ProgramBlock::new);
-    public static final RegistryObject<Item> programblock_item = ITEMS.register("program_block", () -> new BlockItem(programblock.get(), new Item.Properties().rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> programblock_item = ITEMS.register("program_block", () -> new OperatorOnlyItem(programblock.get(), new Item.Properties().rarity(gold)));
     public static final RegistryObject<TileEntityType<ProgramBlockTileEntity>> programblock_tile = TILE_ENTITY_TYPES.register("program_block", () -> TileEntityType.Builder.create(ProgramBlockTileEntity::new).build(null));
 
     public Hacker() {

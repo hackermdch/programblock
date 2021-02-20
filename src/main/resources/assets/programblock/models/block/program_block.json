@@ -1,8 +1,6 @@
 {
-  "parent": "block/template_command_block",
+  "parent": "block/cube_all",
   "textures": {
-    "front": "minecraft:block/command_block_back",
-    "back": "minecraft:block/command_block_back",
-    "side": "minecraft:block/command_block_back"
+    "all": "programblock:block/program_block"
   }
 }

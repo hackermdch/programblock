@@ -44,7 +44,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            args "-mixin.config=programblock.mixins.json"
             mods {
                 hacker {
                     source sourceSets.main
@@ -60,7 +59,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            args "-mixin.config=programblock.mixins.json"
             mods {
                 hacker {
                     source sourceSets.main
@@ -128,7 +126,7 @@ jar {
                 "Implementation-Version"  : version,
                 "Implementation-Vendor"   : "hacker_mdch",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "programblock.mixins.json"
+                "MixinConnector"            : "com.hacker.programblock.MixinConnector"
         ])
     }
 }

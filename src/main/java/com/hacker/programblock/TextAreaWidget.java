@@ -19,6 +19,7 @@ public class TextAreaWidget extends TextFieldWidget {
     private int col = 0;
     private int row = 1;
     private int scroll = 0;
+    private int lineScrollOffset;
 
     public TextAreaWidget(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
         super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
@@ -300,57 +301,65 @@ public class TextAreaWidget extends TextFieldWidget {
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
-            if (enableBackgroundDrawing) {
-                int i = this.isFocused() ? -1 : -6250336;
-                fill(matrixStack, this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, i);
-                fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, -16777216);
-            }
-            int color = this.isEnabled ? this.enabledColor : this.disabledColor;
-            String[] ss = getLines();
-            boolean showCursor = this.isFocused() && cursorCounter / 6 % 2 == 0;
-            boolean cursorInText = false;
-            int curX = 0;
-            int curY = 0;
-            for (int i = scroll; i < ss.length; i++) {
-                int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
-                int y = this.enableBackgroundDrawing ? this.y + (i - scroll) * 8 : this.y;
-                int x1 = x;
-                String s = this.fontRenderer.func_238412_a_(ss[i].substring(lineScrollOffset), this.getAdjustedWidth());
-                boolean flag = ss[i].length() > s.length();
-                if (i == row - 1) {
-                    if (flag)
-                        s = this.fontRenderer.func_238412_a_(ss[i].substring(Math.max(0, col - s.length())), this.getAdjustedWidth());
+            try {
+                if (enableBackgroundDrawing) {
+                    int i = this.isFocused() ? -1 : -6250336;
+                    fill(matrixStack, this.x - 1, this.y - 1, this.x + this.width + 1, this.y + this.height + 1, i);
+                    fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, -16777216);
+                }
+                int color = this.isEnabled ? this.enabledColor : this.disabledColor;
+                String[] ss = getLines();
+                boolean showCursor = this.isFocused() && cursorCounter / 6 % 2 == 0;
+                boolean cursorInText;
+                int curX;
+                int curY;
+                int scrooll = 0;
+                {
+                    int mainr = row - 1;
+                    int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
+                    int y = this.enableBackgroundDrawing ? this.y + (mainr - scroll) * 8 : this.y;
+                    int x1 = x;
+                    String s = this.fontRenderer.func_238412_a_(ss[mainr], this.getAdjustedWidth());
+                    boolean flag = ss[mainr].length() > s.length() && (col > ss[mainr].indexOf(s) + s.length() - 1 || col < ss[mainr].indexOf(s));
+                    int srind = col - ss[mainr].indexOf(s);
+                    if (flag) {
+                        scrooll = col - s.length();
+                        s = this.fontRenderer.func_238412_a_(ss[mainr].substring(Math.max(0, scrooll)), this.getAdjustedWidth());
+                        srind = col - ss[mainr].indexOf(s);
+                    }
                     if (!s.isEmpty()) {
-                        if (flag)
-                            x1 = this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s, lineScrollOffset), x, y, color);
-                        else {
-                            x1 = this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(ss[i].substring(0, col), lineScrollOffset), x, y, color);
-                        }
+                        x1 = this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s.substring(0, MathHelper.clamp(srind, 0, s.length())), col), x, y, color);
                     }
                     curX = x1;
                     curY = y;
-                    cursorInText = col < s.length();
+                    cursorInText = col < ss[mainr].length();
                     if (cursorInText) {
                         curX = x1 - 1;
                         --x1;
                     }
-                    if (!s.isEmpty() && !flag) {
-                        this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(ss[i].substring(col), col), x1, y, color);
-                    }
-                } else {
-                    if (flag)
-                        s = this.fontRenderer.func_238412_a_(col - ss[row - 1].length() < ss[i].length() && col - ss[row - 1].length() >= 0 ? ss[i].substring(col - ss[row - 1].length()) : "", this.getAdjustedWidth());
                     if (!s.isEmpty()) {
-                        this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s, lineScrollOffset), x, y, color);
+                        this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s.substring(Math.min(s.length(), srind)), col), x1, y, color);
                     }
                 }
-            }
-            if (showCursor) {
-                if (cursorInText) {
-                    AbstractGui.fill(matrixStack, curX, curY - 1, curX + 1, curY + 1 + 9, -3092272);
-                } else {
-                    this.fontRenderer.drawStringWithShadow(matrixStack, "_", curX, curY, color);
+                for (int i = scroll; i < ss.length; i++) {
+                    int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
+                    int y = this.enableBackgroundDrawing ? this.y + (i - scroll) * 8 : this.y;
+                    if (i != row - 1) {
+                        String s2 = this.fontRenderer.func_238412_a_(ss[i].substring(MathHelper.clamp(scrooll, 0, ss[i].length())), getAdjustedWidth());
+                        if (!s2.isEmpty()) {
+                            this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s2, 0), x, y, color);
+                        }
+                    }
                 }
+                if (showCursor) {
+                    if (cursorInText) {
+                        AbstractGui.fill(matrixStack, curX, curY - 1, curX + 1, curY + 1 + 9, -3092272);
+                    } else {
+                        this.fontRenderer.drawStringWithShadow(matrixStack, "_", curX, curY, color);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

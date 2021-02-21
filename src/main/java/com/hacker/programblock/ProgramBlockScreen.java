@@ -20,7 +20,13 @@ public class ProgramBlockScreen extends Screen {
         codes = new TextAreaWidget(this.font, this.width / 2 - 150, 50, 300, 100, new TranslationTextComponent("program.code"));
         codes.setMaxStringLength(Integer.MAX_VALUE);
         children.add(codes);
+        setFocusedDefault(codes);
         codes.setFocused2(true);
+    }
+
+    @Override
+    public void tick() {
+        codes.tick();
     }
 
     @Override
@@ -37,10 +43,10 @@ public class ProgramBlockScreen extends Screen {
             minecraft.displayGuiScreen(null);
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            codes.setText(codes.getText() + "\n");
-            return true;
-        }
+//        if (keyCode == GLFW.GLFW_KEY_ENTER) {
+//            codes.setText(codes.getText() + "\n");
+//            return true;
+//        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

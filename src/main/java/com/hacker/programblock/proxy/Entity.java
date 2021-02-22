@@ -1,7 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import com.hacker.programblock.mixin.accessor.EntityAccessor;
-import net.minecraft.block.BlockState;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.EntitySize;
@@ -24,7 +23,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
@@ -45,12 +43,13 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
         this.target = Objects.requireNonNull(target);
     }
 
+    @Nonnull
     public net.minecraft.entity.Entity getTarget() {
         return target;
     }
 
     public boolean func_242278_a(BlockPos p_242278_1_, BlockState p_242278_2_) {
-        return target.func_242278_a(p_242278_1_, p_242278_2_);
+        return target.func_242278_a(p_242278_1_.getTarget(), p_242278_2_.getTarget());
     }
 
     public int getTeamColor() {
@@ -227,11 +226,11 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     protected void onInsideBlock(BlockState state) {
-        ((EntityAccessor) target).invokeonInsideBlock(state);
+        ((EntityAccessor) target).invokeonInsideBlock(state.getTarget());
     }
 
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        ((EntityAccessor) target).invokeplayStepSound(pos, blockIn);
+        ((EntityAccessor) target).invokeplayStepSound(pos.getTarget(), blockIn.getTarget());
     }
 
     protected void playSwimSound(float volume) {
@@ -271,7 +270,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
-        ((EntityAccessor) target).invokeupdateFallState(y, onGroundIn, state, pos);
+        ((EntityAccessor) target).invokeupdateFallState(y, onGroundIn, state.getTarget(), pos.getTarget());
     }
 
     public boolean isImmuneToFire() {
@@ -363,7 +362,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public void moveToBlockPosAndAngles(BlockPos pos, float rotationYawIn, float rotationPitchIn) {
-        target.moveToBlockPosAndAngles(pos, rotationYawIn, rotationPitchIn);
+        target.moveToBlockPosAndAngles(pos.getTarget(), rotationYawIn, rotationPitchIn);
     }
 
     public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
@@ -555,7 +554,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public void setPortal(BlockPos pos) {
-        target.setPortal(pos);
+        target.setPortal(pos.getTarget());
     }
 
     protected void updatePortal() {
@@ -720,7 +719,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn) {
-        target.setMotionMultiplier(state, motionMultiplierIn);
+        target.setMotionMultiplier(state.getTarget(), motionMultiplierIn);
     }
 
     public boolean isEntityEqual(Entity entityIn) {
@@ -776,11 +775,11 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public float getExplosionResistance(Explosion explosionIn, IBlockReader worldIn, BlockPos pos, BlockState blockStateIn, FluidState fluidState, float explosionPower) {
-        return target.getExplosionResistance(explosionIn, worldIn, pos, blockStateIn, fluidState, explosionPower);
+        return target.getExplosionResistance(explosionIn, worldIn, pos.getTarget(), blockStateIn.getTarget(), fluidState, explosionPower);
     }
 
     public boolean canExplosionDestroyBlock(Explosion explosionIn, IBlockReader worldIn, BlockPos pos, BlockState blockStateIn, float explosionPower) {
-        return target.canExplosionDestroyBlock(explosionIn, worldIn, pos, blockStateIn, explosionPower);
+        return target.canExplosionDestroyBlock(explosionIn, worldIn, pos.getTarget(), blockStateIn.getTarget(), explosionPower);
     }
 
     public int getMaxFallHeight() {
@@ -899,11 +898,11 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
         return target.ignoreItemEntityData();
     }
 
-    public boolean func_233577_ch_() {
+    public boolean isPositionDirty() {
         return target.func_233577_ch_();
     }
 
-    public boolean func_233578_ci_() {
+    public boolean isLoaded() {
         return target.func_233578_ci_();
     }
 
@@ -1040,7 +1039,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
-        return target.canTrample(state, pos, fallDistance);
+        return target.canTrample(state.getTarget(), pos.getTarget(), fallDistance);
     }
 
     public final boolean isAddedToWorld() {

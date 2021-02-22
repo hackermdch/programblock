@@ -1,8 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import com.hacker.programblock.mixin.accessor.WorldAccessor;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -11,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.storage.MapData;
@@ -19,7 +17,9 @@ import net.minecraft.world.storage.MapData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -32,8 +32,19 @@ public class World implements IProxy<net.minecraft.world.World> {
         this.target = Objects.requireNonNull(target);
     }
 
+    @Nonnull
     public net.minecraft.world.World getTarget() {
         return target;
+    }
+
+    public List<Entity> getEntitiesInAABBexcluding(@Nullable Entity entityIn, AxisAlignedBB boundingBox, @Nullable Predicate<? super net.minecraft.entity.Entity> predicate) {
+        assert entityIn != null;
+        List<Entity> p = new ArrayList<>();
+        List<net.minecraft.entity.Entity> l = target.getEntitiesInAABBexcluding(entityIn.getTarget(), boundingBox, predicate);
+        for (net.minecraft.entity.Entity e : l) {
+            p.add(new Entity(e));
+        }
+        return p;
     }
 
     public boolean isRemote() {
@@ -41,52 +52,56 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
-        return target.setBlockState(pos, newState, flags);
+        return target.setBlockState(pos.getTarget(), newState.getTarget(), flags);
     }
 
     public boolean setBlockState(BlockPos pos, BlockState state, int flags, int recursionLeft) {
-        return target.setBlockState(pos, state, flags, recursionLeft);
+        return target.setBlockState(pos.getTarget(), state.getTarget(), flags, recursionLeft);
+    }
+
+    public BlockState getBlockState(BlockPos pos) {
+        return new BlockState(target.getBlockState(pos.getTarget()));
     }
 
     public void markAndNotifyBlock(BlockPos pos, @Nullable Chunk chunk, BlockState blockstate, BlockState state, int flags, int recursionLeft) {
-        target.markAndNotifyBlock(pos, chunk, blockstate, state, flags, recursionLeft);
+        target.markAndNotifyBlock(pos.getTarget(), chunk, blockstate.getTarget(), state.getTarget(), flags, recursionLeft);
     }
 
     public void onBlockStateChange(BlockPos pos, BlockState blockStateIn, BlockState newState) {
-        target.onBlockStateChange(pos, blockStateIn, newState);
+        target.onBlockStateChange(pos.getTarget(), blockStateIn.getTarget(), newState.getTarget());
     }
 
     public boolean removeBlock(BlockPos pos, boolean isMoving) {
-        return target.removeBlock(pos, isMoving);
+        return target.removeBlock(pos.getTarget(), isMoving);
     }
 
     public boolean destroyBlock(BlockPos pos, boolean dropBlock, @Nullable Entity entity, int recursionLeft) {
         assert entity != null;
-        return target.destroyBlock(pos, dropBlock, entity.getTarget(), recursionLeft);
+        return target.destroyBlock(pos.getTarget(), dropBlock, entity.getTarget(), recursionLeft);
     }
 
     public boolean setBlockState(BlockPos pos, BlockState state) {
-        return target.setBlockState(pos, state);
+        return target.setBlockState(pos.getTarget(), state.getTarget());
     }
 
     public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-        target.notifyBlockUpdate(pos, oldState, newState, flags);
+        target.notifyBlockUpdate(pos.getTarget(), oldState.getTarget(), newState.getTarget(), flags);
     }
 
     public void markBlockRangeForRenderUpdate(BlockPos blockPosIn, BlockState oldState, BlockState newState) {
-        target.markBlockRangeForRenderUpdate(blockPosIn, oldState, newState);
+        target.markBlockRangeForRenderUpdate(blockPosIn.getTarget(), oldState.getTarget(), newState.getTarget());
     }
 
     public void notifyNeighborsOfStateChange(BlockPos pos, Block blockIn) {
-        target.notifyNeighborsOfStateChange(pos, blockIn);
+        target.notifyNeighborsOfStateChange(pos.getTarget(), blockIn.getTarget());
     }
 
     public void notifyNeighborsOfStateExcept(BlockPos pos, Block blockType, Direction skipSide) {
-        target.notifyNeighborsOfStateExcept(pos, blockType, skipSide);
+        target.notifyNeighborsOfStateExcept(pos.getTarget(), blockType.getTarget(), skipSide);
     }
 
     public void neighborChanged(BlockPos pos, Block blockIn, BlockPos fromPos) {
-        target.neighborChanged(pos, blockIn, fromPos);
+        target.neighborChanged(pos.getTarget(), blockIn.getTarget(), fromPos.getTarget());
     }
 
     public int getHeight(Heightmap.Type heightmapType, int x, int z) {
@@ -102,7 +117,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void playSound(@Nullable PlayerEntity player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
-        target.playSound(player, pos, soundIn, category, volume, pitch);
+        target.playSound(player, pos.getTarget(), soundIn, category, volume, pitch);
     }
 
     public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
@@ -154,23 +169,23 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void setTileEntity(BlockPos pos, @Nullable TileEntity tileEntityIn) {
-        target.setTileEntity(pos, tileEntityIn);
+        target.setTileEntity(pos.getTarget(), tileEntityIn);
     }
 
     public void removeTileEntity(BlockPos pos) {
-        target.removeTileEntity(pos);
+        target.removeTileEntity(pos.getTarget());
     }
 
     public boolean isBlockPresent(BlockPos pos) {
-        return target.isBlockPresent(pos);
+        return target.isBlockPresent(pos.getTarget());
     }
 
     public boolean isDirectionSolid(BlockPos pos, Entity entity, Direction direction) {
-        return target.isDirectionSolid(pos, entity.getTarget(), direction);
+        return target.isDirectionSolid(pos.getTarget(), entity.getTarget(), direction);
     }
 
     public boolean isTopSolid(BlockPos pos, Entity entityIn) {
-        return target.isTopSolid(pos, entityIn.getTarget());
+        return target.isTopSolid(pos.getTarget(), entityIn.getTarget());
     }
 
     public void calculateInitialSkylight() {
@@ -190,7 +205,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void markChunkDirty(BlockPos pos, TileEntity unusedTileEntity) {
-        target.markChunkDirty(pos, unusedTileEntity);
+        target.markChunkDirty(pos.getTarget(), unusedTileEntity);
     }
 
     public int getSeaLevel() {
@@ -198,23 +213,23 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public int getStrongPower(BlockPos pos) {
-        return target.getStrongPower(pos);
+        return target.getStrongPower(pos.getTarget());
     }
 
     public boolean isSidePowered(BlockPos pos, Direction side) {
-        return target.isSidePowered(pos, side);
+        return target.isSidePowered(pos.getTarget(), side);
     }
 
     public int getRedstonePower(BlockPos pos, Direction facing) {
-        return target.getRedstonePower(pos, facing);
+        return target.getRedstonePower(pos.getTarget(), facing);
     }
 
     public boolean isBlockPowered(BlockPos pos) {
-        return target.isBlockPowered(pos);
+        return target.isBlockPowered(pos.getTarget());
     }
 
     public int getRedstonePowerFromNeighbors(BlockPos pos) {
-        return target.getRedstonePowerFromNeighbors(pos);
+        return target.getRedstonePowerFromNeighbors(pos.getTarget());
     }
 
     public void sendQuittingDisconnectingPacket() {
@@ -230,7 +245,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public boolean isBlockModifiable(PlayerEntity player, BlockPos pos) {
-        return target.isBlockModifiable(player, pos);
+        return target.isBlockModifiable(player, pos.getTarget());
     }
 
     public void setEntityState(Entity entityIn, byte state) {
@@ -238,7 +253,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void addBlockEvent(BlockPos pos, Block blockIn, int eventID, int eventParam) {
-        target.addBlockEvent(pos, blockIn, eventID, eventParam);
+        target.addBlockEvent(pos.getTarget(), blockIn.getTarget(), eventID, eventParam);
     }
 
     public float getThunderStrength(float delta) {
@@ -266,11 +281,11 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public boolean isRainingAt(BlockPos position) {
-        return target.isRainingAt(position);
+        return target.isRainingAt(position.getTarget());
     }
 
     public boolean isBlockinHighHumidity(BlockPos pos) {
-        return target.isBlockinHighHumidity(pos);
+        return target.isBlockinHighHumidity(pos.getTarget());
     }
 
     public void registerMapData(MapData mapDataIn) {
@@ -282,11 +297,11 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void playBroadcastSound(int id, BlockPos pos, int data) {
-        target.playBroadcastSound(id, pos, data);
+        target.playBroadcastSound(id, pos.getTarget(), data);
     }
 
     public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
-        target.sendBlockBreakProgress(breakerId, pos, progress);
+        target.sendBlockBreakProgress(breakerId, pos.getTarget(), progress);
     }
 
     public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, @Nullable CompoundNBT compound) {
@@ -294,7 +309,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void updateComparatorOutputLevel(BlockPos pos, Block blockIn) {
-        target.updateComparatorOutputLevel(pos, blockIn);
+        target.updateComparatorOutputLevel(pos.getTarget(), blockIn.getTarget());
     }
 
     public int getSkylightSubtracted() {
@@ -310,7 +325,7 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public boolean hasBlockState(BlockPos pos, Predicate<BlockState> state) {
-        return target.hasBlockState(pos, state);
+        return target.hasBlockState(pos.getTarget(), (s) -> state.test(new BlockState(s)));
     }
 
     public boolean isSaveDisabled() {

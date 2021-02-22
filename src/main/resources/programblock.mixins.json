@@ -6,6 +6,7 @@
   "mixins": [
     "accessor.AbstractBlockAccessor",
     "accessor.EntityAccessor",
-    "accessor.WorldAccessor"
+    "accessor.WorldAccessor",
+    "accessor.Vector3iAccessor"
   ]
 }

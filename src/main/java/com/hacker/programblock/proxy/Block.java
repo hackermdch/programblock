@@ -12,7 +12,6 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
@@ -34,6 +33,12 @@ public class Block extends AbstractBlock {
         this.target = target;
     }
 
+    @Nonnull
+    @Override
+    public net.minecraft.block.Block getTarget() {
+        return target;
+    }
+
     public boolean isIn(ITag<net.minecraft.block.Block> tagIn) {
         return target.isIn(tagIn);
     }
@@ -47,19 +52,19 @@ public class Block extends AbstractBlock {
     }
 
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return target.propagatesSkylightDown(state, reader, pos);
+        return target.propagatesSkylightDown(state, reader, pos.getTarget());
     }
 
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        target.animateTick(stateIn, worldIn.getTarget(), pos, rand);
+        target.animateTick(stateIn, worldIn.getTarget(), pos.getTarget(), rand);
     }
 
     public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        target.onPlayerDestroy(worldIn, pos, state);
+        target.onPlayerDestroy(worldIn, pos.getTarget(), state);
     }
 
     public void dropXpOnBlockBreak(ServerWorld worldIn, BlockPos pos, int amount) {
-        target.dropXpOnBlockBreak(worldIn, pos, amount);
+        target.dropXpOnBlockBreak(worldIn, pos.getTarget(), amount);
     }
 
     public float getExplosionResistance() {
@@ -67,19 +72,19 @@ public class Block extends AbstractBlock {
     }
 
     public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
-        target.onExplosionDestroy(worldIn.getTarget(), pos, explosionIn);
+        target.onExplosionDestroy(worldIn.getTarget(), pos.getTarget(), explosionIn);
     }
 
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
-        target.onEntityWalk(worldIn.getTarget(), pos, entityIn.getTarget());
+        target.onEntityWalk(worldIn.getTarget(), pos.getTarget(), entityIn.getTarget());
     }
 
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        target.harvestBlock(worldIn.getTarget(), player, pos, state, te, stack);
+        target.harvestBlock(worldIn.getTarget(), player, pos.getTarget(), state, te, stack);
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        target.onBlockPlacedBy(worldIn.getTarget(), pos, state, placer, stack);
+        target.onBlockPlacedBy(worldIn.getTarget(), pos.getTarget(), state, placer, stack);
     }
 
     public boolean canSpawnInBlock() {
@@ -87,7 +92,7 @@ public class Block extends AbstractBlock {
     }
 
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        target.onFallenUpon(worldIn.getTarget(), pos, entityIn.getTarget(), fallDistance);
+        target.onFallenUpon(worldIn.getTarget(), pos.getTarget(), entityIn.getTarget(), fallDistance);
     }
 
     public void onLanded(IBlockReader worldIn, Entity entityIn) {
@@ -111,11 +116,11 @@ public class Block extends AbstractBlock {
     }
 
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        target.onBlockHarvested(worldIn.getTarget(), pos, state, player);
+        target.onBlockHarvested(worldIn.getTarget(), pos.getTarget(), state, player);
     }
 
     public void fillWithRain(World worldIn, BlockPos pos) {
-        target.fillWithRain(worldIn.getTarget(), pos);
+        target.fillWithRain(worldIn.getTarget(), pos.getTarget());
     }
 
     public boolean canDropFromExplosion(Explosion explosionIn) {
@@ -140,7 +145,7 @@ public class Block extends AbstractBlock {
 
     public float getSlipperiness(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity entity) {
         assert entity != null;
-        return target.getSlipperiness(state, world, pos, entity.getTarget());
+        return target.getSlipperiness(state, world, pos.getTarget(), entity.getTarget());
     }
 
     public int getHarvestLevel(BlockState state) {
@@ -148,6 +153,6 @@ public class Block extends AbstractBlock {
     }
 
     public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, net.minecraftforge.common.IPlantable plantable) {
-        return target.canSustainPlant(state, world, pos, facing, plantable);
+        return target.canSustainPlant(state, world, pos.getTarget(), facing, plantable);
     }
 }

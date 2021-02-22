@@ -1,5 +1,6 @@
 package com.hacker.programblock;
 
+import com.hacker.programblock.proxy.Player;
 import com.hacker.programblock.proxy.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -55,5 +56,11 @@ public class ProgramUtils {
         a.add(the_end);
         a.addAll(Arrays.asList(getOthers()));
         return (World[]) a.toArray();
+    }
+
+    public static List<Player> getPlayers() {
+        List<Player> ps = new ArrayList<>();
+        Hacker.server.getPlayerList().getPlayers().forEach((p) -> ps.add(new Player(p)));
+        return ps;
     }
 }

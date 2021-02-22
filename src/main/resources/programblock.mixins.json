@@ -7,6 +7,8 @@
     "accessor.AbstractBlockAccessor",
     "accessor.EntityAccessor",
     "accessor.WorldAccessor",
-    "accessor.Vector3iAccessor"
+    "accessor.Vector3iAccessor",
+    "accessor.LivingEntityAccessor",
+    "accessor.PlayerAccessor"
   ]
 }

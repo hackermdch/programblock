@@ -49,14 +49,14 @@ public class ProgramBlockTileEntity extends TileEntity {
     public String genSource() {
         return "package com.hacker.dy;\n" +
                 "import com.hacker.programblock.proxy.*;\n" +
-                "import java.util.*;\n"+
+                "import java.util.*;\n" +
                 "import static com.hacker.programblock.ProgramUtils.*;\n" +
                 "class " + getClassName() + " implements Runnable {\n" +
                 "\tpublic " + getClassName() + "(){}\n" +
-                '\t' +
-                "public void run() {\n" +
-                "\t\t" + code.replaceAll("\n", "\n\t\t") +
-                "\n\t}\n" +
+                "\tpublic void run() {\n" + "\t\t" + code.replaceAll("\n", "\n\t\t") + "\n\t}\n" +
+                "\tprivate int getX(){return " + getPos().getX() + ";}\n" +
+                "\tprivate int getY(){return " + getPos().getY() + ";}\n" +
+                "\tprivate int getZ(){return " + getPos().getZ() + ";}\n" +
                 "}";
     }
 }

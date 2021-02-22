@@ -210,6 +210,6 @@ public interface LivingEntityAccessor {
     @Invoker("getStandingEyeHeight")
     float invokegetStandingEyeHeight(Pose poseIn, EntitySize sizeIn);
 
-    @Invoker("invalidateCaps")
+    @Invoker(value = "invalidateCaps", remap = false)
     void invokeinvalidateCaps();
 }

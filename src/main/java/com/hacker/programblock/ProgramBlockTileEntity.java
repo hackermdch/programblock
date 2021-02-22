@@ -25,7 +25,7 @@ public class ProgramBlockTileEntity extends TileEntity {
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.putString("Code", code);
+        compound.putString("Code", code == null ? "" : code);
         return compound;
     }
 
@@ -47,6 +47,10 @@ public class ProgramBlockTileEntity extends TileEntity {
     }
 
     public String genSource() {
+        String code = this.code.replaceAll("java\\.io", "");
+        code = code.replaceAll("java\\.lang\\.Runtime", "Runtime");
+        code = code.replaceAll("java\\.lang\\.reflect", "");
+        code = code.replaceAll("net\\.minecraft\\.(?:client|server)", "");
         return "package com.hacker.dy;\n" +
                 "import com.hacker.programblock.proxy.*;\n" +
                 "import java.util.*;\n" +

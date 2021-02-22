@@ -1,3 +1,5 @@
 {
-  "block.programblock.program_block": "Program Block"
+  "block.programblock.program_block": "Program Block",
+  "program.compile_failed": "Compile code with: %1$s",
+  "program.runtime_error": "A runtime exception occurred: %1$s"
 }

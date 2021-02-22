@@ -1,11 +1,16 @@
 package com.hacker.programblock;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
+@SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public class ProgramBlockScreen extends Screen {
     private final ProgramBlockTileEntity programBlock;
     protected TextAreaWidget codes;
@@ -24,9 +29,36 @@ public class ProgramBlockScreen extends Screen {
         codes.setFocused2(true);
     }
 
+    public void update() {
+        Networking.INSTANCE.sendToServer(new CUpdateProgramBlock(programBlock.getPos(), codes.getText()));
+    }
+
+    @Override
+    public void onClose() {
+        assert minecraft != null;
+        minecraft.keyboardListener.enableRepeatEvents(false);
+    }
+
+    @Override
+    public void closeScreen() {
+        update();
+        super.closeScreen();
+    }
+
     @Override
     public void tick() {
         codes.tick();
+    }
+
+    @Override
+    public void resize(Minecraft minecraft, int width, int height) {
+        String s = codes.getText();
+        int row = codes.getRow();
+        int col = codes.getCol();
+        this.init(minecraft, width, height);
+        codes.setText(s);
+        codes.setCursorRow(row);
+        codes.setCursorCol(col);
     }
 
     @Override
@@ -43,10 +75,6 @@ public class ProgramBlockScreen extends Screen {
             minecraft.displayGuiScreen(null);
             return true;
         }
-//        if (keyCode == GLFW.GLFW_KEY_ENTER) {
-//            codes.setText(codes.getText() + "\n");
-//            return true;
-//        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

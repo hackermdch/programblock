@@ -214,6 +214,14 @@ public class TextAreaWidget extends TextFieldWidget {
         }
     }
 
+    public int getCol() {
+        return col;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
     @Override
     public void setText(String textIn) {
         if (this.validator.test(textIn)) {
@@ -240,11 +248,7 @@ public class TextAreaWidget extends TextFieldWidget {
     }
 
     public void setCursorCol(int col) {
-        this.col = col;
-        if (!this.field_212956_h) {
-            this.setCursorCol(this.col);
-        }
-        this.onTextChanged(this.text);
+        this.col = MathHelper.clamp(col, 0, getLines()[row - 1].length());
     }
 
     @Override
@@ -323,7 +327,7 @@ public class TextAreaWidget extends TextFieldWidget {
                     boolean flag = ss[mainr].length() > s.length() && (col > ss[mainr].indexOf(s) + s.length() - 1 || col < ss[mainr].indexOf(s));
                     int srind = col - ss[mainr].indexOf(s);
                     if (flag) {
-                        scrooll = col - s.length();
+                        scrooll = col - s.length() + 1;
                         s = this.fontRenderer.func_238412_a_(ss[mainr].substring(Math.max(0, scrooll)), this.getAdjustedWidth());
                         srind = col - ss[mainr].indexOf(s);
                     }

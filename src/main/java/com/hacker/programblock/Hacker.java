@@ -10,8 +10,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -44,6 +46,12 @@ public class Hacker {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        FMLJavaModLoadingContext.get().getModEventBus().register(new Object() {
+            @SubscribeEvent
+            public void onCommonSetup(FMLCommonSetupEvent event) {
+                event.enqueueWork(Networking::registerMessage);
+            }
+        });
         TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         try {
             Entity e = Minecraft.getInstance().player;

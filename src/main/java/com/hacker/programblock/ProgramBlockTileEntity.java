@@ -31,12 +31,13 @@ public class ProgramBlockTileEntity extends TileEntity {
 
     public String genSource() {
         return "package com.hacker.dy;\n" +
-                "import com.hacker.programblock.proxy;\n" +
+                "import com.hacker.programblock.proxy.*;\n" +
                 "class " + getClassName() + " implements Runnable {\n" +
+                "\t public " + getClassName() + "(){}\n" +
                 '\t' +
                 "public void run() {\n" +
-                code +
-                "\t}\n" +
+                "\t\t" + code.replaceAll("\n", "\n\t\t") +
+                "\n\t}\n" +
                 "}";
     }
 }

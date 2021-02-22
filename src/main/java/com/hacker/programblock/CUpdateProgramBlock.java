@@ -8,6 +8,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.io.StringWriter;
 import java.util.function.Supplier;
 
 public class CUpdateProgramBlock {
@@ -21,7 +22,7 @@ public class CUpdateProgramBlock {
 
     public CUpdateProgramBlock(PacketBuffer buf) {
         pos = buf.readBlockPos();
-        code = buf.readString(Integer.MAX_VALUE);
+        code = buf.readString(Integer.MAX_VALUE / 4);
     }
 
     public void writePacketData(PacketBuffer buf) {
@@ -38,8 +39,9 @@ public class CUpdateProgramBlock {
                 ProgramBlockTileEntity prob = (ProgramBlockTileEntity) tileentity;
                 prob.code = code;
                 prob.markDirty();
+                StringWriter s = new StringWriter();
                 try {
-                    Class<?> z = Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource());
+                    Class<?> z = Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource(), s);
                     try {
                         Runnable r = (Runnable) z.newInstance();
                         r.run();
@@ -48,12 +50,18 @@ public class CUpdateProgramBlock {
                         for (StackTraceElement se : e2.getStackTrace()) {
                             player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
                         }
+                        e2.printStackTrace();
                     }
                 } catch (Exception e) {
-                    player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", e.toString()));
-                    for (StackTraceElement se : e.getStackTrace()) {
-                        player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                    if (s.toString().isEmpty()) {
+                        player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", e.toString()));
+                        for (StackTraceElement se : e.getStackTrace()) {
+                            player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                        }
+                    } else {
+                        player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", s.toString()));
                     }
+                    e.printStackTrace();
                 }
             }
         });

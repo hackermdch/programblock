@@ -1,10 +1,5 @@
 package com.hacker.programblock;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-
 import javax.tools.SimpleJavaFileObject;
 import java.io.*;
 import java.net.URI;
@@ -45,12 +40,6 @@ public class MemoryJavaFileObject extends SimpleJavaFileObject {
     }
 
     public byte[] getBytecode() {
-        ClassReader r = new ClassReader(bytecode.toByteArray());
-        ClassNode node = new ClassNode();
-        r.accept(node, 0);
-        node.access += Opcodes.ACC_PUBLIC;
-        ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        node.accept(w);
-        return w.toByteArray();
+        return bytecode.toByteArray();
     }
 }

@@ -321,7 +321,7 @@ public class TextAreaWidget extends TextFieldWidget {
                 {
                     int mainr = row - 1;
                     int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
-                    int y = this.enableBackgroundDrawing ? this.y + (mainr - scroll) * 8 : this.y;
+                    int y = this.enableBackgroundDrawing ? this.y + (mainr - scroll) * 8 + 1 : this.y;
                     int x1 = x;
                     String s = this.fontRenderer.func_238412_a_(ss[mainr], this.getAdjustedWidth());
                     boolean flag = ss[mainr].length() > s.length() && (col > ss[mainr].indexOf(s) + s.length() - 1 || col < ss[mainr].indexOf(s));
@@ -347,7 +347,7 @@ public class TextAreaWidget extends TextFieldWidget {
                 }
                 for (int i = scroll; i < ss.length; i++) {
                     int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
-                    int y = this.enableBackgroundDrawing ? this.y + (i - scroll) * 8 : this.y;
+                    int y = this.enableBackgroundDrawing ? this.y + (i - scroll) * 8 + 1 : this.y;
                     if (i != row - 1) {
                         String s2 = this.fontRenderer.func_238412_a_(ss[i].substring(MathHelper.clamp(scrooll, 0, ss[i].length())), getAdjustedWidth());
                         if (!s2.isEmpty()) {

@@ -24,19 +24,16 @@ public class ProgramBlockScreen extends Screen {
     protected void init() {
         codes = new TextAreaWidget(this.font, this.width / 2 - 150, 50, 300, 100, new TranslationTextComponent("program.code"));
         codes.setMaxStringLength(Integer.MAX_VALUE);
+        codes.setText(programBlock.code);
+        codes.setCursorPositionEnd();
         children.add(codes);
         setFocusedDefault(codes);
         codes.setFocused2(true);
     }
 
     public void update() {
+        programBlock.code = codes.getText();
         Networking.INSTANCE.sendToServer(new CUpdateProgramBlock(programBlock.getPos(), codes.getText()));
-    }
-
-    @Override
-    public void onClose() {
-        assert minecraft != null;
-        minecraft.keyboardListener.enableRepeatEvents(false);
     }
 
     @Override

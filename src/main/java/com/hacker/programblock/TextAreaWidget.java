@@ -268,7 +268,7 @@ public class TextAreaWidget extends TextFieldWidget {
     @Override
     public void writeText(String textToWrite) {
         if (this.validator.test(textToWrite)) {
-            addText(textToWrite);
+            addText(textToWrite.replaceAll("\r", ""));
             col += textToWrite.length();
             onTextChanged(this.text);
         }

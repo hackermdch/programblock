@@ -13,6 +13,10 @@ public class Compiler {
     private static JavaCompiler compiler;
     private static boolean inited = false;
 
+    public static boolean isInited() {
+        return inited;
+    }
+
     public static Class<?> compile(String packageName, String className, CharSequence sourceCode, Writer error) throws Exception {
         if (!inited) {
             compiler = ToolProvider.getSystemJavaCompiler();
@@ -25,5 +29,13 @@ public class Compiler {
         JavaCompiler.CompilationTask task = compiler.getTask(error, fileManager, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Collections.singletonList(file));
         task.call();
         return classLoader.loadClass(packageName + "." + className);
+    }
+
+    public static MemoryClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    public static MemoryFileManager getFileManager() {
+        return fileManager;
     }
 }

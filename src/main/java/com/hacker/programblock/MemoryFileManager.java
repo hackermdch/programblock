@@ -81,6 +81,12 @@ public class MemoryFileManager extends ForwardingJavaFileManager<JavaFileManager
     }
 
     public void addJavaFileObject(Location location, String packageName, String relativeName, MemoryJavaFileObject object) throws URISyntaxException {
-        javaFileObjectMap.put(fromLocation(location, packageName, relativeName), object);
+        URI uri = fromLocation(location, packageName, relativeName);
+        javaFileObjectMap.remove(uri);
+        javaFileObjectMap.put(uri, object);
+    }
+
+    public void removeFileObject(Location location, String packageName, String relativeName) throws URISyntaxException {
+        javaFileObjectMap.remove(fromLocation(location, packageName, relativeName));
     }
 }

@@ -41,6 +41,7 @@ public class CUpdateProgramBlock {
                 prob.markDirty();
                 StringWriter s = new StringWriter();
                 try {
+                    prob.update();
                     Class<?> z = Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource(), s);
                     try {
                         Runnable r = (Runnable) z.newInstance();
@@ -59,7 +60,7 @@ public class CUpdateProgramBlock {
                             player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
                         }
                     } else {
-                        player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", s.toString()));
+                        player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", s.toString().replaceAll("\r", "").replaceAll("\t", "  ")));
                     }
                     e.printStackTrace();
                 }

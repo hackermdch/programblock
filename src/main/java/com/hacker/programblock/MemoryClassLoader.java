@@ -55,7 +55,12 @@ public class MemoryClassLoader extends ClassLoader {
     }
 
     public void addFileObject(String name, MemoryJavaFileObject object) {
+        javaFileObjectMap.remove(name);
         javaFileObjectMap.put(name, object);
+    }
+
+    public void removeFileObject(String name) {
+        javaFileObjectMap.remove(name);
     }
 
     public Collection<MemoryJavaFileObject> listObjects() {

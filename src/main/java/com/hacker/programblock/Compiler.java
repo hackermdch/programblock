@@ -25,7 +25,7 @@ public class Compiler {
             inited = true;
         }
         MemoryJavaFileObject file = new MemoryJavaFileObject(className, sourceCode);
-        fileManager.addJavaFileObject(StandardLocation.SOURCE_PATH, packageName, className + ".java", file);
+        fileManager.addJavaFileObject(StandardLocation.SOURCE_PATH, packageName.replaceAll("\\.", "/"), className + ".java", file);
         JavaCompiler.CompilationTask task = compiler.getTask(error, fileManager, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Collections.singletonList(file));
         task.call();
         return classLoader.loadClass(packageName + "." + className);

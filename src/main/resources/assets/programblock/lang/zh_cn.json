@@ -1,5 +1,6 @@
 {
   "block.programblock.program_block": "程序方块",
   "program.compile_failed": "编译时出现错误: %1$s",
-  "program.runtime_error": "运行时出现异常: %1$s"
+  "program.runtime_error": "运行时出现异常: %1$s",
+  "program.open_editor": "打开外部编辑器"
 }

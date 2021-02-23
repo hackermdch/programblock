@@ -7,6 +7,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -75,6 +76,11 @@ public class ProgramUtils {
                 return new Player(p);
         }
         return null;
+    }
+
+    public static void print(String str) {
+        getPlayers().forEach((p) -> p.sendMessage(from(TextFormatting.GOLD + "<" + trans("block.programblock.program_block").getString() + ">" + TextFormatting.WHITE + str), DUMMY_UUID));
+        System.out.println(str);
     }
 
     public static StringTextComponent from(String str) {

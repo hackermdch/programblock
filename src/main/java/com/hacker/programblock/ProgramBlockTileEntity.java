@@ -36,8 +36,8 @@ public class ProgramBlockTileEntity extends TileEntity {
     public void update() {
         if (Compiler.isInited()) {
             try {
-                Compiler.getFileManager().removeFileObject(StandardLocation.SOURCE_PATH, "com.hacker.dy", getClassName() + ".java");
-                Compiler.getFileManager().removeFileObject(StandardLocation.CLASS_PATH, "com.hacker.dy", getClassName() + ".class");
+                Compiler.getFileManager().removeFileObject(StandardLocation.SOURCE_PATH, "com/hacker/dy", getClassName() + ".java");
+                Compiler.getFileManager().removeFileObject(StandardLocation.CLASS_PATH, "com/hacker/dy", getClassName() + ".class");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

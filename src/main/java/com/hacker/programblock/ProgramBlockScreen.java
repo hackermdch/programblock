@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,6 +15,7 @@ import org.lwjgl.glfw.GLFW;
 public class ProgramBlockScreen extends Screen {
     private final ProgramBlockTileEntity programBlock;
     protected TextAreaWidget codes;
+    protected Button editor;
 
     public ProgramBlockScreen(ProgramBlockTileEntity programBlock) {
         super(NarratorChatListener.EMPTY);
@@ -26,6 +28,9 @@ public class ProgramBlockScreen extends Screen {
         codes.setMaxStringLength(Integer.MAX_VALUE);
         codes.setText(programBlock.code);
         codes.setCursorPositionEnd();
+        editor = addButton(new Button(this.width / 2 + 4, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.open_editor"), (e) -> {
+
+        }));
         children.add(codes);
         setFocusedDefault(codes);
         codes.setFocused2(true);

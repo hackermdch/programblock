@@ -345,7 +345,10 @@ public class TextAreaWidget extends TextFieldWidget {
                         this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s.substring(Math.min(s.length(), srind)), col), x1, y, color);
                     }
                 }
+                int c = 0;
                 for (int i = scroll; i < ss.length; i++) {
+                    if (c >= 12)
+                        break;
                     int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
                     int y = this.enableBackgroundDrawing ? this.y + (i - scroll) * 8 + 1 : this.y;
                     if (i != row - 1) {
@@ -354,6 +357,7 @@ public class TextAreaWidget extends TextFieldWidget {
                             this.fontRenderer.func_238407_a_(matrixStack, this.textFormatter.apply(s2, 0), x, y, color);
                         }
                     }
+                    c++;
                 }
                 if (showCursor) {
                     if (cursorInText) {

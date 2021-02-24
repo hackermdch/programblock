@@ -2,5 +2,6 @@
   "block.programblock.program_block": "Program Block",
   "program.compile_failed": "Compile code with: %1$s",
   "program.runtime_error": "A runtime exception occurred: %1$s",
-  "program.open_editor": "Open external editor"
+  "program.open_editor": "Open external editor",
+  "program.editor_redirect": "Please finish editing in the external editor"
 }

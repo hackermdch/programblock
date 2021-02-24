@@ -9,6 +9,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.SharedConstants;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -20,6 +21,7 @@ public class TextAreaWidget extends TextFieldWidget {
     private int row = 1;
     private int scroll = 0;
     private int lineScrollOffset;
+    public boolean redirect = false;
 
     public TextAreaWidget(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
         super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
@@ -253,16 +255,18 @@ public class TextAreaWidget extends TextFieldWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        if (!this.canWrite()) {
-            return false;
-        } else if (SharedConstants.isAllowedCharacter(codePoint)) {
-            if (this.isEnabled) {
-                this.writeText(Character.toString(codePoint));
+        if (!redirect)
+            if (!this.canWrite()) {
+                return false;
+            } else if (SharedConstants.isAllowedCharacter(codePoint)) {
+                if (this.isEnabled) {
+                    this.writeText(Character.toString(codePoint));
+                }
+                return true;
+            } else {
+                return false;
             }
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     @Override
@@ -304,7 +308,11 @@ public class TextAreaWidget extends TextFieldWidget {
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if (visible) {
+        if (redirect) {
+            String s = new TranslationTextComponent("program.editor_redirect").getString();
+            int w = fontRenderer.getStringWidth(s);
+            fontRenderer.drawStringWithShadow(matrixStack, s, x + width / 2.0f - w / 2.0f, y + height / 2.0f - 4, 0xff0000);
+        } else if (visible) {
             try {
                 if (enableBackgroundDrawing) {
                     int i = this.isFocused() ? -1 : -6250336;

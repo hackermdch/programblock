@@ -79,7 +79,7 @@ public class ProgramUtils {
     }
 
     public static void print(String str) {
-        getPlayers().forEach((p) -> p.sendMessage(from(TextFormatting.GOLD + "<" + trans("block.programblock.program_block").getString() + ">" + TextFormatting.WHITE + str), DUMMY_UUID));
+        getPlayers().forEach((p) -> p.sendMessage(from(TextFormatting.GOLD + "<" + trans("block.programblock.program_block").getString() + ">" + TextFormatting.WHITE + " " + str), DUMMY_UUID));
         System.out.println(str);
     }
 

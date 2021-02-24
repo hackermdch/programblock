@@ -10,12 +10,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.*;
+
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class ProgramBlockScreen extends Screen {
     private final ProgramBlockTileEntity programBlock;
     protected TextAreaWidget codes;
     protected Button editor;
+    private boolean openEdit = false;
 
     public ProgramBlockScreen(ProgramBlockTileEntity programBlock) {
         super(NarratorChatListener.EMPTY);
@@ -29,7 +32,43 @@ public class ProgramBlockScreen extends Screen {
         codes.setText(programBlock.code);
         codes.setCursorPositionEnd();
         editor = addButton(new Button(this.width / 2 + 4, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.open_editor"), (e) -> {
-
+            if (!openEdit) {
+                Thread t = new Thread(() -> {
+                    InputStream s = getClass().getClassLoader().getResourceAsStream("assets/programblock/Editor.exe");
+                    if (s != null) {
+                        try {
+                            File f = new File(System.getProperty("java.io.tmpdir") + "/Editor.exe");
+                            FileOutputStream o = new FileOutputStream(f);
+                            byte[] b = new byte[1024];
+                            int len;
+                            while ((len = s.read(b)) > 0) {
+                                o.write(b, 0, len);
+                            }
+                            o.close();
+                            s.close();
+                            ProcessBuilder pb = new ProcessBuilder(f.getAbsolutePath(), codes.getText());
+                            Process p = pb.start();
+                            openEdit = true;
+                            getCodes().redirect = true;
+                            p.waitFor();
+                            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                            StringBuilder sb = new StringBuilder();
+                            while (br.ready()) {
+                                sb.append(br.readLine());
+                                if (br.ready())
+                                    sb.append('\n');
+                            }
+                            br.close();
+                            getCodes().setText(sb.toString());
+                            openEdit = false;
+                            getCodes().redirect = false;
+                        } catch (IOException | InterruptedException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
+                });
+                t.start();
+            }
         }));
         children.add(codes);
         setFocusedDefault(codes);
@@ -52,15 +91,21 @@ public class ProgramBlockScreen extends Screen {
         codes.tick();
     }
 
+    public TextAreaWidget getCodes() {
+        return codes;
+    }
+
     @Override
     public void resize(Minecraft minecraft, int width, int height) {
         String s = codes.getText();
         int row = codes.getRow();
         int col = codes.getCol();
+        boolean rs = codes.redirect;
         this.init(minecraft, width, height);
         codes.setText(s);
         codes.setCursorRow(row);
         codes.setCursorCol(col);
+        codes.redirect = rs;
     }
 
     @Override
@@ -73,7 +118,8 @@ public class ProgramBlockScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            closeScreen();
+            if (!openEdit)
+                closeScreen();
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);

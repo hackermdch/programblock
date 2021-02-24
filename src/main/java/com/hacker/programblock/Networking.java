@@ -27,7 +27,6 @@ public class Networking {
                 CUpdateProgramBlock.class,
                 CUpdateProgramBlock::writePacketData,
                 CUpdateProgramBlock::new,
-                CUpdateProgramBlock::processPacket
-        );
+                CUpdateProgramBlock::processPacket);
     }
 }

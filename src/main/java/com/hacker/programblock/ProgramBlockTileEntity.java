@@ -2,8 +2,11 @@ package com.hacker.programblock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nullable;
 import javax.tools.StandardLocation;
 import java.net.URISyntaxException;
 
@@ -20,6 +23,29 @@ public class ProgramBlockTileEntity extends TileEntity {
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         code = nbt.getString("Code");
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT compoundNBT = super.getUpdateTag();
+        compoundNBT.putString("Code", code == null ? "" : code);
+        return compoundNBT;
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        code = tag.getString("Code");
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
     }
 
     @Override

@@ -15,6 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class ProgramUtils {
@@ -45,6 +46,22 @@ public class ProgramUtils {
         return Hacker.server != null;
     }
 
+    public static void callAsync(BlockPos pos, World world, Consumer<Object> callback, Map<String, Object> args) {
+        TileEntity e = world.getTileEntity(pos);
+        if (e instanceof ProgramBlockTileEntity) {
+            ProgramBlockTileEntity pb = (ProgramBlockTileEntity) e;
+            pb.call(false, args, callback);
+        }
+    }
+
+    public static void callAsync(BlockPos pos, Consumer<Object> callback) {
+        callAsync(pos, overworld, callback, null);
+    }
+
+    public static void callAsync(int x, int y, int z, Consumer<Object> callback) {
+        callAsync(new BlockPos(x, y, z), callback);
+    }
+
     public static Object call(BlockPos pos, World world, Map<String, Object> args) {
         TileEntity e = world.getTileEntity(pos);
         if (e instanceof ProgramBlockTileEntity) {
@@ -54,12 +71,24 @@ public class ProgramUtils {
         return null;
     }
 
+    public static Object call(BlockPos pos, World world) {
+        return call(pos, world, null);
+    }
+
     public static Object call(BlockPos pos, Map<String, Object> args) {
         return call(pos, getOverworld(), args);
     }
 
     public static Object call(int x, int y, int z, Map<String, Object> args) {
         return call(new BlockPos(x, y, z), args);
+    }
+
+    public static Object call(BlockPos pos) {
+        return call(pos, getOverworld(), null);
+    }
+
+    public static Object call(int x, int y, int z) {
+        return call(new BlockPos(x, y, z));
     }
 
     public static World getOverworld() {

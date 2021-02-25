@@ -2,6 +2,7 @@ package com.hacker.programblock;
 
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public interface ProgramFunction {
     void putArg(String key, Object val);
 
@@ -13,3 +14,4 @@ public interface ProgramFunction {
 
     void setArgs(Map<String, Object> args);
 }
+

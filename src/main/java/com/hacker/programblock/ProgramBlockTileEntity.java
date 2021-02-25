@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @SuppressWarnings("all")
 public final class ProgramBlockTileEntity extends TileEntity {
@@ -42,6 +43,10 @@ public final class ProgramBlockTileEntity extends TileEntity {
     }
 
     protected Object call(boolean sync, Map<String, Object> args) {
+        return call(sync, args, null);
+    }
+
+    protected Object call(boolean sync, Map<String, Object> args, Consumer<Object> callback) {
         try {
             Class<?> z = null;
             try {
@@ -67,7 +72,10 @@ public final class ProgramBlockTileEntity extends TileEntity {
             if (getThreadInPos(pos) != null)
                 Objects.requireNonNull(getThreadInPos(pos)).stop();
             if (!sync) {
-                Thread t = new Thread(r);
+                Callback c = new Callback();
+                c.delegate = r;
+                c.callback = callback;
+                Thread t = new Thread(c);
                 t.setDaemon(true);
                 setThreadInPos(pos, t);
                 t.start();

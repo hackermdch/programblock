@@ -28,6 +28,10 @@ public class ProgramBlockScreen extends Screen {
         this.programBlock = programBlock;
     }
 
+    private TranslationTextComponent getControlText() {
+        return programBlock.redstone_control ? new TranslationTextComponent("program.redstone_control.enable") : new TranslationTextComponent("program.redstone_control.disble");
+    }
+
     @Override
     protected void init() {
         codes = new TextAreaWidget(this.font, this.width / 2 - 150, 50, 300, 100, new TranslationTextComponent("program.code"));
@@ -38,9 +42,9 @@ public class ProgramBlockScreen extends Screen {
             if (!openEdit)
                 closeScreen();
         }));
-        control = addButton(new Button(this.width / 2 - 75 + 4, this.height / 4 + 90 + 12, 150, 20, new TranslationTextComponent("program.redstone_control.enable"), (e) -> {
+        control = addButton(new Button(this.width / 2 - 75 + 4, this.height / 4 + 90 + 12, 150, 20, getControlText(), (e) -> {
             programBlock.redstone_control = !programBlock.redstone_control;
-            control.setMessage(programBlock.redstone_control ? new TranslationTextComponent("program.redstone_control.enable") : new TranslationTextComponent("program.redstone_control.disble"));
+            control.setMessage(getControlText());
         }));
         editor = addButton(new Button(this.width / 2 + 4, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.open_editor"), (e) -> {
             if (!openEdit) {
@@ -90,7 +94,7 @@ public class ProgramBlockScreen extends Screen {
 
     public void update() {
         programBlock.code = codes.getText();
-        Networking.INSTANCE.sendToServer(new CUpdateProgramBlock(programBlock.getPos(), codes.getText()));
+        Networking.INSTANCE.sendToServer(new CUpdateProgramBlock(programBlock.getPos(), codes.getText(), programBlock.redstone_control));
     }
 
     @Override

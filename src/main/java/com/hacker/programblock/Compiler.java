@@ -12,19 +12,15 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 
+@SuppressWarnings("all")
 public class Compiler {
     private static MemoryClassLoader classLoader;
     private static MemoryFileManager fileManager;
     private static JavaCompiler compiler;
     private static String classpath;
-    private static boolean inited = false;
 
-    public static boolean isInited() {
-        return inited;
-    }
-
-    public static Class<?> compile(String packageName, String className, CharSequence sourceCode, Writer error) throws Exception {
-        if (!inited) {
+    static {
+        try {
             compiler = ToolProvider.getSystemJavaCompiler();
             if (compiler == null) {
                 String s = "com.sun.tools.javac.api.JavacTool";
@@ -58,8 +54,12 @@ public class Compiler {
                 }
                 classpath = sb.toString();
             }
-            inited = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public static Class<?> compile(String packageName, String className, CharSequence sourceCode, Writer error) throws Exception {
         MemoryJavaFileObject file = new MemoryJavaFileObject(className, sourceCode);
         fileManager.addJavaFileObject(StandardLocation.SOURCE_PATH, packageName.replaceAll("\\.", "/"), className + ".java", file);
         JavaCompiler.CompilationTask task = compiler.getTask(error, fileManager, null, Arrays.asList("-source", "1.8", "-target", "1.8", "-classpath", System.getProperty("java.class.path") + ";" + classpath), null, Collections.singletonList(file));

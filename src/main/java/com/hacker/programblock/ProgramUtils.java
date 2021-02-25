@@ -1,9 +1,11 @@
 package com.hacker.programblock;
 
 import com.hacker.programblock.proxy.Block;
+import com.hacker.programblock.proxy.BlockPos;
 import com.hacker.programblock.proxy.Player;
 import com.hacker.programblock.proxy.World;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
@@ -41,6 +43,23 @@ public class ProgramUtils {
 
     public static boolean checkServerNonNull() {
         return Hacker.server != null;
+    }
+
+    public static Object call(BlockPos pos, World world, Map<String, Object> args) {
+        TileEntity e = world.getTileEntity(pos);
+        if (e instanceof ProgramBlockTileEntity) {
+            ProgramBlockTileEntity pb = (ProgramBlockTileEntity) e;
+            return pb.call(true, args);
+        }
+        return null;
+    }
+
+    public static Object call(BlockPos pos, Map<String, Object> args) {
+        return call(pos, getOverworld(), args);
+    }
+
+    public static Object call(int x, int y, int z, Map<String, Object> args) {
+        return call(new BlockPos(x, y, z), args);
     }
 
     public static World getOverworld() {

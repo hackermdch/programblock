@@ -55,6 +55,25 @@ public class World implements IProxy<net.minecraft.world.World> {
         return target.setBlockState(pos.getTarget(), newState.getTarget(), flags);
     }
 
+    @Nullable
+    public TileEntity getTileEntity(BlockPos pos) {
+        if (net.minecraft.world.World.isOutsideBuildHeight(pos.getTarget())) {
+            return null;
+        } else {
+            TileEntity tileentity = null;
+            if (target.processingLoadedTiles) {
+                tileentity = target.getPendingTileEntityAt(pos.getTarget());
+            }
+            if (tileentity == null) {
+                tileentity = target.getChunkAt(pos.getTarget()).getTileEntity(pos.getTarget(), Chunk.CreateEntityType.IMMEDIATE);
+            }
+            if (tileentity == null) {
+                tileentity = target.getPendingTileEntityAt(pos.getTarget());
+            }
+            return tileentity;
+        }
+    }
+
     public boolean setBlockState(BlockPos pos, BlockState state, int flags, int recursionLeft) {
         return target.setBlockState(pos.getTarget(), state.getTarget(), flags, recursionLeft);
     }

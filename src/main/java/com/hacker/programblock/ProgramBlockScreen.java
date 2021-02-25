@@ -135,8 +135,10 @@ public class ProgramBlockScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            if (!openEdit)
-                closeScreen();
+            if (!openEdit) {
+                assert minecraft != null;
+                minecraft.displayGuiScreen(null);
+            }
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);

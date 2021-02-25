@@ -1,9 +1,6 @@
 package com.hacker.programblock;
 
-import com.hacker.programblock.proxy.Block;
-import com.hacker.programblock.proxy.BlockPos;
-import com.hacker.programblock.proxy.Player;
-import com.hacker.programblock.proxy.World;
+import com.hacker.programblock.proxy.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -146,5 +143,10 @@ public class ProgramUtils {
     public static Block getBlock(String id) {
         net.minecraft.block.Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
         return b != null ? new Block(b) : null;
+    }
+
+    public static Item getItem(String id) {
+        net.minecraft.item.Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(id));
+        return i != null ? new Item(i) : null;
     }
 }

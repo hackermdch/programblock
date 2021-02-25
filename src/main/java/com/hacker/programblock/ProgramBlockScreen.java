@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
@@ -46,8 +47,10 @@ public class ProgramBlockScreen extends Screen {
                             }
                             o.close();
                             s.close();
-                            ProcessBuilder pb = new ProcessBuilder(f.getAbsolutePath(), codes.getText());
+                            ProcessBuilder pb = new ProcessBuilder(f.getAbsolutePath());
                             Process p = pb.start();
+                            p.getOutputStream().write(codes.getText().getBytes(StandardCharsets.UTF_8));
+                            p.getOutputStream().close();
                             openEdit = true;
                             getCodes().redirect = true;
                             p.waitFor();

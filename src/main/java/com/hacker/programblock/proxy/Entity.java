@@ -23,6 +23,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
@@ -94,6 +95,10 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
 
     protected void registerData() {
         ((EntityAccessor) target).invokeregisterData();
+    }
+
+    public RayTraceResult pick(double rayTraceDistance, float partialTicks, boolean rayTraceFluids) {
+        return target.pick(rayTraceDistance, partialTicks, rayTraceFluids);
     }
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

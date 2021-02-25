@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.storage.MapData;
@@ -37,13 +36,11 @@ public class World implements IProxy<net.minecraft.world.World> {
         return target;
     }
 
-    public List<Entity> getEntitiesInAABBexcluding(@Nullable Entity entityIn, AxisAlignedBB boundingBox, @Nullable Predicate<? super net.minecraft.entity.Entity> predicate) {
+    public List<Entity> getEntities(@Nullable Entity entityIn, Box boundingBox, @Nullable Predicate<? super Entity> predicate) {
         assert entityIn != null;
         List<Entity> p = new ArrayList<>();
-        List<net.minecraft.entity.Entity> l = target.getEntitiesInAABBexcluding(entityIn.getTarget(), boundingBox, predicate);
-        for (net.minecraft.entity.Entity e : l) {
-            p.add(new Entity(e));
-        }
+        List<net.minecraft.entity.Entity> l = target.getEntitiesInAABBexcluding(entityIn.getTarget(), boundingBox.getTarget(), predicate != null ? (e) -> predicate.test(new Entity(e)) : null);
+        l.forEach((e) -> p.add(new Entity(e)));
         return p;
     }
 

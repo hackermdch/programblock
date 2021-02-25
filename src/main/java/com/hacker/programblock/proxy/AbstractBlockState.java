@@ -1,7 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -119,7 +118,7 @@ public class AbstractBlockState implements IProxy<AbstractBlock.AbstractBlockSta
     }
 
     public boolean isSideInvisible(BlockState state, Direction face) {
-        return target.isSideInvisible(state, face);
+        return target.isSideInvisible(state.getTarget(), face);
     }
 
     public final boolean canSpawnMobs(IBlockReader reader, BlockPos pos, Entity entity) {
@@ -155,11 +154,11 @@ public class AbstractBlockState implements IProxy<AbstractBlock.AbstractBlockSta
     }
 
     public void onBlockAdded(World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        target.onBlockAdded(worldIn.getTarget(), pos.getTarget(), oldState, isMoving);
+        target.onBlockAdded(worldIn.getTarget(), pos.getTarget(), oldState.getTarget(), isMoving);
     }
 
     public void onReplaced(World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        target.onReplaced(worldIn.getTarget(), pos.getTarget(), newState, isMoving);
+        target.onReplaced(worldIn.getTarget(), pos.getTarget(), newState.getTarget(), isMoving);
     }
 
     public void tick(ServerWorld worldIn, BlockPos posIn, Random randomIn) {
@@ -231,7 +230,7 @@ public class AbstractBlockState implements IProxy<AbstractBlock.AbstractBlockSta
     }
 
     public void onProjectileCollision(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
-        target.onProjectileCollision(worldIn.getTarget(), state, hit, projectile);
+        target.onProjectileCollision(worldIn.getTarget(), state.getTarget(), hit, projectile);
     }
 
     public boolean isSolidSide(IBlockReader blockReaderIn, BlockPos blockPosIn, Direction directionIn) {

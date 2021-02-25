@@ -1,7 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import com.hacker.programblock.mixin.accessor.BlockAccessor;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,6 +38,10 @@ public class Block extends AbstractBlock {
         return target;
     }
 
+    public BlockState getDefaultState() {
+        return new BlockState(target.getDefaultState());
+    }
+
     public boolean isIn(ITag<net.minecraft.block.Block> tagIn) {
         return target.isIn(tagIn);
     }
@@ -48,19 +51,19 @@ public class Block extends AbstractBlock {
     }
 
     public boolean ticksRandomly(BlockState state) {
-        return target.ticksRandomly(state);
+        return target.ticksRandomly(state.getTarget());
     }
 
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return target.propagatesSkylightDown(state, reader, pos.getTarget());
+        return target.propagatesSkylightDown(state.getTarget(), reader, pos.getTarget());
     }
 
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        target.animateTick(stateIn, worldIn.getTarget(), pos.getTarget(), rand);
+        target.animateTick(stateIn.getTarget(), worldIn.getTarget(), pos.getTarget(), rand);
     }
 
     public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        target.onPlayerDestroy(worldIn, pos.getTarget(), state);
+        target.onPlayerDestroy(worldIn, pos.getTarget(), state.getTarget());
     }
 
     public void dropXpOnBlockBreak(ServerWorld worldIn, BlockPos pos, int amount) {
@@ -80,11 +83,11 @@ public class Block extends AbstractBlock {
     }
 
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        target.harvestBlock(worldIn.getTarget(), player, pos.getTarget(), state, te, stack);
+        target.harvestBlock(worldIn.getTarget(), player, pos.getTarget(), state.getTarget(), te, stack);
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        target.onBlockPlacedBy(worldIn.getTarget(), pos.getTarget(), state, placer, stack);
+        target.onBlockPlacedBy(worldIn.getTarget(), pos.getTarget(), state.getTarget(), placer, stack);
     }
 
     public boolean canSpawnInBlock() {
@@ -116,7 +119,7 @@ public class Block extends AbstractBlock {
     }
 
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        target.onBlockHarvested(worldIn.getTarget(), pos.getTarget(), state, player);
+        target.onBlockHarvested(worldIn.getTarget(), pos.getTarget(), state.getTarget(), player);
     }
 
     public void fillWithRain(World worldIn, BlockPos pos) {
@@ -127,12 +130,12 @@ public class Block extends AbstractBlock {
         return target.canDropFromExplosion(explosionIn);
     }
 
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, net.minecraft.block.BlockState> builder) {
         ((BlockAccessor) target).invokefillStateContainer(builder);
     }
 
     protected final void setDefaultState(BlockState state) {
-        ((BlockAccessor) target).invokesetDefaultState(state);
+        ((BlockAccessor) target).invokesetDefaultState(state.getTarget());
     }
 
     public boolean isVariableOpacity() {
@@ -145,14 +148,14 @@ public class Block extends AbstractBlock {
 
     public float getSlipperiness(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity entity) {
         assert entity != null;
-        return target.getSlipperiness(state, world, pos.getTarget(), entity.getTarget());
+        return target.getSlipperiness(state.getTarget(), world, pos.getTarget(), entity.getTarget());
     }
 
     public int getHarvestLevel(BlockState state) {
-        return target.getHarvestLevel(state);
+        return target.getHarvestLevel(state.getTarget());
     }
 
     public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, net.minecraftforge.common.IPlantable plantable) {
-        return target.canSustainPlant(state, world, pos.getTarget(), facing, plantable);
+        return target.canSustainPlant(state.getTarget(), world, pos.getTarget(), facing, plantable);
     }
 }

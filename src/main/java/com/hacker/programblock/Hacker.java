@@ -13,6 +13,8 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,7 +33,22 @@ public class Hacker {
     public static final RegistryObject<TileEntityType<ProgramBlockTileEntity>> programblock_tile = TILE_ENTITY_TYPES.register("program_block", () -> TileEntityType.Builder.create(ProgramBlockTileEntity::new).build(null));
 
     public Hacker() {
-        MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
+        MinecraftForge.EVENT_BUS.register(new Object() {
+            @SubscribeEvent
+            public void onServerStarted(FMLServerStartedEvent event) {
+                server = event.getServer();
+            }
+
+            @SubscribeEvent
+            public void onServerStopping(FMLServerStoppingEvent event) {
+                ProgramBlockTileEntity.removeAllThread();
+            }
+
+            @SubscribeEvent
+            public void onServerStoped(FMLServerStoppedEvent event) {
+                server = null;
+            }
+        });
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().register(new Object() {
@@ -41,9 +58,5 @@ public class Hacker {
             }
         });
         TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
-
-    private void onServerStarted(FMLServerStartedEvent event) {
-        Hacker.server = event.getServer();
     }
 }

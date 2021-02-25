@@ -5,15 +5,19 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import javax.tools.StandardLocation;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
-@SuppressWarnings("NullableProblems")
-public class ProgramBlockTileEntity extends TileEntity {
+@SuppressWarnings({"NullableProblems", "deprecation"})
+public final class ProgramBlockTileEntity extends TileEntity {
     public String code;
     private int classnum = -1;
+    private static final Map<BlockPos, Thread> threads = new HashMap<>();
 
     public ProgramBlockTileEntity() {
         super(Hacker.programblock_tile.get());
@@ -23,6 +27,54 @@ public class ProgramBlockTileEntity extends TileEntity {
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         code = nbt.getString("Code");
+    }
+
+    protected static Thread getThreadInPos(BlockPos pos) {
+        for (BlockPos a : threads.keySet()) {
+            if (a.equals(pos)) {
+                return threads.get(a);
+            }
+        }
+        return null;
+    }
+
+    protected static Thread getThreadInPos(int x, int y, int z) {
+        return getThreadInPos(new BlockPos(x, y, z));
+    }
+
+    protected static void setThreadInPos(BlockPos pos, Thread thread) {
+        for (BlockPos a : threads.keySet()) {
+            if (a.equals(pos)) {
+                threads.get(a).stop();
+                threads.remove(a);
+                threads.put(pos, thread);
+                return;
+            }
+        }
+        threads.put(pos, thread);
+    }
+
+    protected static void setThreadInPos(int x, int y, int z, Thread thread) {
+        setThreadInPos(new BlockPos(x, y, z), thread);
+    }
+
+    protected static void removeThreadIn(BlockPos pos) {
+        for (BlockPos a : threads.keySet()) {
+            if (a.equals(pos)) {
+                threads.get(a).stop();
+                threads.remove(a);
+                return;
+            }
+        }
+    }
+
+    protected static void removeAllThread() {
+        threads.values().forEach(Thread::stop);
+        threads.clear();
+    }
+
+    protected static void removeThreadIn(int x, int y, int z) {
+        removeThreadIn(new BlockPos(x, y, z));
     }
 
     @Override

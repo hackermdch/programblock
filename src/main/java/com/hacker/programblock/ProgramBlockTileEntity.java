@@ -1,23 +1,29 @@
 package com.hacker.programblock;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import javax.tools.StandardLocation;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings({"NullableProblems", "deprecation"})
 public final class ProgramBlockTileEntity extends TileEntity {
     public String code;
     private int classnum = -1;
     private static final Map<BlockPos, Thread> threads = new HashMap<>();
+    public boolean powered = false;
+    protected boolean redstone_control = true;
 
     public ProgramBlockTileEntity() {
         super(Hacker.programblock_tile.get());
@@ -27,6 +33,30 @@ public final class ProgramBlockTileEntity extends TileEntity {
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         code = nbt.getString("Code");
+    }
+
+    protected void execute() {
+        try {
+            Class<?> z = Compiler.getClassLoader().loadClass("com.hacker.dy." + getClassName());
+            Runnable r = (Runnable) z.newInstance();
+            if (getThreadInPos(pos) != null)
+                Objects.requireNonNull(getThreadInPos(pos)).stop();
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            setThreadInPos(pos, t);
+            t.start();
+        } catch (Exception e) {
+            assert world != null;
+            for (ServerPlayerEntity player : Objects.requireNonNull(world.getServer()).getPlayerList().getPlayers()) {
+                if (player.hasPermissionLevel(2)) {
+                    player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), pos));
+                    for (StackTraceElement se : e.getStackTrace()) {
+                        player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                    }
+                }
+            }
+            e.printStackTrace();
+        }
     }
 
     protected static Thread getThreadInPos(BlockPos pos) {

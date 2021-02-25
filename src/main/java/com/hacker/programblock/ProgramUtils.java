@@ -39,6 +39,10 @@ public class ProgramUtils {
         return (World[]) a.toArray();
     }
 
+    public static boolean checkServerNonNull() {
+        return Hacker.server != null;
+    }
+
     public static World getOverworld() {
         return overworld;
     }

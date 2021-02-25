@@ -9,7 +9,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.io.StringWriter;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class CUpdateProgramBlock {
@@ -31,7 +30,6 @@ public class CUpdateProgramBlock {
         buf.writeString(code);
     }
 
-    @SuppressWarnings("deprecation")
     public void processPacket(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
@@ -44,22 +42,7 @@ public class CUpdateProgramBlock {
                 StringWriter s = new StringWriter();
                 try {
                     prob.update();
-                    Class<?> z = Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource(), s);
-                    try {
-                        Runnable r = (Runnable) z.newInstance();
-                        if (prob.getThreadInPos(pos) != null)
-                            Objects.requireNonNull(prob.getThreadInPos(pos)).stop();
-                        Thread t = new Thread(r);
-                        t.setDaemon(true);
-                        prob.setThreadInPos(pos, t);
-                        t.start();
-                    } catch (Exception e2) {
-                        player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e2.toString()));
-                        for (StackTraceElement se : e2.getStackTrace()) {
-                            player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
-                        }
-                        e2.printStackTrace();
-                    }
+                    Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource(), s);
                 } catch (Exception e) {
                     if (s.toString().isEmpty()) {
                         player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", e.toString()));
@@ -70,7 +53,9 @@ public class CUpdateProgramBlock {
                         player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.compile_failed", s.toString().replaceAll("\r", "").replaceAll("\t", "  ")));
                     }
                     e.printStackTrace();
+                    return;
                 }
+                player.getCommandSource().sendFeedback(new TranslationTextComponent("program.compile_success"), false);
             }
         });
         ctx.get().setPacketHandled(true);

@@ -1,7 +1,11 @@
 {
   "block.programblock.program_block": "程序方块",
   "program.compile_failed": "编译时出现错误: %1$s",
-  "program.runtime_error": "运行时出现异常: %1$s",
+  "program.compile_success": "编译成功",
+  "program.save": "保存并编译",
+  "program.runtime_error": "位于%2$s的方块运行时出现异常: %1$s",
   "program.open_editor": "打开外部编辑器",
-  "program.editor_redirect": "请在外置编辑器完成编辑"
+  "program.editor_redirect": "请在外置编辑器完成编辑",
+  "program.redstone_control.enable": "红石控制:启用",
+  "program.redstone_control.disble": "红石控制:禁用"
 }

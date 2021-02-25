@@ -1,5 +1,6 @@
 package com.hacker.programblock;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -30,6 +31,24 @@ public class ProgramBlock extends ContainerBlock {
             return ActionResultType.func_233537_a_(worldIn.isRemote);
         } else {
             return ActionResultType.PASS;
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (!worldIn.isRemote) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof ProgramBlockTileEntity) {
+                ProgramBlockTileEntity programBlock = (ProgramBlockTileEntity) tileentity;
+                boolean flag = worldIn.isBlockPowered(pos);
+                boolean flag1 = programBlock.powered;
+                programBlock.powered = flag;
+                if (!flag1) {
+                    if (flag && programBlock.redstone_control) {
+                        programBlock.execute();
+                    }
+                }
+            }
         }
     }
 

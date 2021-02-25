@@ -19,6 +19,8 @@ public class ProgramBlockScreen extends Screen {
     private final ProgramBlockTileEntity programBlock;
     protected TextAreaWidget codes;
     protected Button editor;
+    protected Button save;
+    protected Button control;
     private boolean openEdit = false;
 
     public ProgramBlockScreen(ProgramBlockTileEntity programBlock) {
@@ -32,6 +34,14 @@ public class ProgramBlockScreen extends Screen {
         codes.setMaxStringLength(Integer.MAX_VALUE);
         codes.setText(programBlock.code);
         codes.setCursorPositionEnd();
+        save = addButton(new Button(this.width / 2 - 4 - 150, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.save"), (e) -> {
+            if (!openEdit)
+                closeScreen();
+        }));
+        control = addButton(new Button(this.width / 2 - 75 + 4, this.height / 4 + 90 + 12, 150, 20, new TranslationTextComponent("program.redstone_control.enable"), (e) -> {
+            programBlock.redstone_control = !programBlock.redstone_control;
+            control.setMessage(programBlock.redstone_control ? new TranslationTextComponent("program.redstone_control.enable") : new TranslationTextComponent("program.redstone_control.disble"));
+        }));
         editor = addButton(new Button(this.width / 2 + 4, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.open_editor"), (e) -> {
             if (!openEdit) {
                 Thread t = new Thread(() -> {

@@ -21,15 +21,17 @@ public class ProgramBlockScreen extends Screen {
     protected Button editor;
     protected Button save;
     protected Button control;
+    private boolean redcol;
     private boolean openEdit = false;
 
     public ProgramBlockScreen(ProgramBlockTileEntity programBlock) {
         super(NarratorChatListener.EMPTY);
         this.programBlock = programBlock;
+        redcol = programBlock.redstone_control;
     }
 
     private TranslationTextComponent getControlText() {
-        return programBlock.redstone_control ? new TranslationTextComponent("program.redstone_control.enable") : new TranslationTextComponent("program.redstone_control.disble");
+        return redcol ? new TranslationTextComponent("program.redstone_control.enable") : new TranslationTextComponent("program.redstone_control.disble");
     }
 
     @Override
@@ -43,7 +45,7 @@ public class ProgramBlockScreen extends Screen {
                 closeScreen();
         }));
         control = addButton(new Button(this.width / 2 - 75 + 4, this.height / 4 + 90 + 12, 150, 20, getControlText(), (e) -> {
-            programBlock.redstone_control = !programBlock.redstone_control;
+            redcol = !redcol;
             control.setMessage(getControlText());
         }));
         editor = addButton(new Button(this.width / 2 + 4, this.height / 4 + 120 + 12, 150, 20, new TranslationTextComponent("program.open_editor"), (e) -> {
@@ -94,6 +96,7 @@ public class ProgramBlockScreen extends Screen {
 
     public void update() {
         programBlock.code = codes.getText();
+        programBlock.redstone_control = redcol;
         Networking.INSTANCE.sendToServer(new CUpdateProgramBlock(programBlock.getPos(), codes.getText(), programBlock.redstone_control));
     }
 

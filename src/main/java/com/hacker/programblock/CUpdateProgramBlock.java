@@ -49,7 +49,6 @@ public class CUpdateProgramBlock {
                     Compiler.compile("com.hacker.dy", prob.getClassName(), prob.genSource(), s);
                 } catch (Exception e) {
                     ProgramBlockTileEntity.compileError(s, e, player);
-                    e.printStackTrace();
                     return;
                 }
                 player.getCommandSource().sendFeedback(new TranslationTextComponent("program.compile_success"), false);

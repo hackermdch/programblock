@@ -133,6 +133,10 @@ public class ProgramUtils {
         System.out.println(str);
     }
 
+    public static void print(Object obj) {
+        print(obj != null ? obj.toString() : "null");
+    }
+
     public static StringTextComponent from(String str) {
         return new StringTextComponent(str);
     }

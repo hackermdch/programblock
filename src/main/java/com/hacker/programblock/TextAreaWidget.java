@@ -327,7 +327,7 @@ public class TextAreaWidget extends TextFieldWidget {
                 int curY;
                 int scrooll = 0;
                 {
-                    int mainr = row - 1;
+                    int mainr = MathHelper.clamp(row - 1, 0, ss.length - 1);
                     int x = this.enableBackgroundDrawing ? this.x + 4 : this.x;
                     int y = this.enableBackgroundDrawing ? this.y + (mainr - scroll) * 8 + 1 : this.y;
                     int x1 = x;

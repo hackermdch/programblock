@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
@@ -62,6 +63,15 @@ public class Item implements IProxy<net.minecraft.item.Item> {
 
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         return target.onBlockDestroyed(stack, worldIn.getTarget(), state.getTarget(), pos.getTarget(), entityLiving.getTarget());
+    }
+
+    public int getId() {
+        return Registry.ITEM.getId(target);
+    }
+
+    @Override
+    public String toString() {
+        return target.toString();
     }
 
     public boolean canHarvestBlock(BlockState blockIn) {

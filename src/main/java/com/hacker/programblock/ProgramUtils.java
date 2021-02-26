@@ -5,6 +5,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -14,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.*;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class ProgramUtils {
     private static final World overworld;
     private static final World nether;
@@ -143,6 +144,56 @@ public class ProgramUtils {
     public static Block getBlock(String id) {
         net.minecraft.block.Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
         return b != null ? new Block(b) : null;
+    }
+
+    public static Block getBlock(int id) {
+        net.minecraft.block.Block b = Registry.BLOCK.getByValue(id);
+        return new Block(b);
+    }
+
+    public static List<Block> getBlocks(int... ids) {
+        List<Block> l = new ArrayList<>();
+        for (int i : ids)
+            l.add(new Block(Registry.BLOCK.getByValue(i)));
+        return l;
+    }
+
+    public static List<Block> getBlocks() {
+        List<Block> l = new ArrayList<>();
+        ForgeRegistries.BLOCKS.getValues().forEach((it) -> l.add(new Block(it)));
+        return l;
+    }
+
+    public static List<Block> getBlocks(String... ids) {
+        List<Block> l = new ArrayList<>();
+        for (String s : ids)
+            l.add(new Block(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s))));
+        return l;
+    }
+
+    public static Item getItem(int id) {
+        net.minecraft.item.Item i = Registry.ITEM.getByValue(id);
+        return new Item(i);
+    }
+
+    public static List<Item> getItems(int... ids) {
+        List<Item> l = new ArrayList<>();
+        for (int i : ids)
+            l.add(new Item(Registry.ITEM.getByValue(i)));
+        return l;
+    }
+
+    public static List<Item> getItems(String... ids) {
+        List<Item> l = new ArrayList<>();
+        for (String s : ids)
+            l.add(new Item(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s))));
+        return l;
+    }
+
+    public static List<Item> getItems() {
+        List<Item> l = new ArrayList<>();
+        ForgeRegistries.ITEMS.getValues().forEach((it) -> l.add(new Item(it)));
+        return l;
     }
 
     public static Item getItem(String id) {

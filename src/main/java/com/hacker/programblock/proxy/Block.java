@@ -11,6 +11,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
@@ -132,6 +133,14 @@ public class Block extends AbstractBlock {
 
     protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, net.minecraft.block.BlockState> builder) {
         ((BlockAccessor) target).invokefillStateContainer(builder);
+    }
+
+    public int getId() {
+        return Registry.BLOCK.getId(target);
+    }
+
+    public String toString() {
+        return target.toString();
     }
 
     protected final void setDefaultState(BlockState state) {

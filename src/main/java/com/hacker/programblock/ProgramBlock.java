@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -54,7 +53,7 @@ public class ProgramBlock extends ContainerBlock {
 
     private static void openProgramBlock(PlayerEntity player, ProgramBlockTileEntity programBlock) {
         if (player.world.isRemote) {
-            Minecraft.getInstance().displayGuiScreen(new ProgramBlockScreen(programBlock));
+            GUIProxy.openProgramBlock(programBlock);
         }
     }
 

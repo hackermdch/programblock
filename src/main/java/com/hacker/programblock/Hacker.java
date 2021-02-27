@@ -58,5 +58,6 @@ public class Hacker {
             }
         });
         TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        Compiler.getClassLoader();
     }
 }

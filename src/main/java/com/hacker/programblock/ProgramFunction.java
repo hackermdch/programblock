@@ -13,5 +13,7 @@ public interface ProgramFunction {
     Object getReturnValue();
 
     void setArgs(Map<String, Object> args);
+
+    void execute() throws Exception;
 }
 

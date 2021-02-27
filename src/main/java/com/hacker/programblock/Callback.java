@@ -4,12 +4,16 @@ import java.util.function.Consumer;
 
 public class Callback implements Runnable {
     protected Consumer<Object> callback;
-    protected Runnable delegate;
+    protected ProgramFunction delegate;
 
     @Override
     public void run() {
-        delegate.run();
-        if (callback != null)
-            callback.accept(((ProgramFunction) delegate).getReturnValue());
+        try {
+            delegate.execute();
+            if (callback != null)
+                callback.accept(delegate.getReturnValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

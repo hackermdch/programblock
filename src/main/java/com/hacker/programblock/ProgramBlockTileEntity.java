@@ -65,7 +65,6 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 }
             }
             Object o = z.newInstance();
-            Runnable r = (Runnable) o;
             ProgramFunction fun = (ProgramFunction) o;
             if (args != null)
                 fun.setArgs(args);
@@ -73,14 +72,14 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 Objects.requireNonNull(getThreadInPos(pos)).stop();
             if (!sync) {
                 Callback c = new Callback();
-                c.delegate = r;
+                c.delegate = fun;
                 c.callback = callback;
                 Thread t = new Thread(c);
                 t.setDaemon(true);
                 setThreadInPos(pos, t);
                 t.start();
             } else {
-                r.run();
+                fun.execute();
                 return fun.getReturnValue();
             }
         } catch (Exception e) {
@@ -215,11 +214,11 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 "import java.util.*;\n" +
                 "import com.hacker.programblock.ProgramFunction;\n" +
                 "import static com.hacker.programblock.ProgramUtils.*;\n" +
-                "class " + getClassName() + " implements Runnable,ProgramFunction {\n" +
+                "class " + getClassName() + " implements ProgramFunction {\n" +
                 "\tprivate Map<String,Object> args=new HashMap<>();\n" +
                 "\tprivate Object retval;\n" +
                 "\tpublic " + getClassName() + "(){}\n" +
-                "\tpublic void run() {\n" + "\t\t" + code.replaceAll("\n", "\n\t\t") + "\n\t}\n" +
+                "\tpublic void execute() throws Exception {\n" + "\t\ttry {\n" + "\t\t" + code.replaceAll("\n", "\n\t\t") + "\t\t}catch(Exception e){throw e;}" + "\n\t}\n" +
                 "\tprivate int getX(){return " + getPos().getX() + ";}\n" +
                 "\tprivate int getY(){return " + getPos().getY() + ";}\n" +
                 "\tprivate int getZ(){return " + getPos().getZ() + ";}\n" +

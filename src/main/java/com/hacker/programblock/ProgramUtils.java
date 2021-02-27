@@ -9,7 +9,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -17,27 +16,27 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("all")
 public class ProgramUtils {
-    private static final World overworld;
-    private static final World nether;
-    private static final World the_end;
+    private static final ServerWorld overworld;
+    private static final ServerWorld nether;
+    private static final ServerWorld the_end;
     public static final UUID DUMMY_UUID = Util.DUMMY_UUID;
 
     static {
-        overworld = new World(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.OVERWORLD)));
-        nether = new World(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_NETHER)));
-        the_end = new World(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_END)));
+        overworld = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.OVERWORLD)));
+        nether = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_NETHER)));
+        the_end = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_END)));
     }
 
-    private static World[] getOthers() {
-        Iterable<ServerWorld> worlds = Hacker.server.getWorlds();
+    private static ServerWorld[] getOthers() {
+        Iterable<net.minecraft.world.server.ServerWorld> worlds = Hacker.server.getWorlds();
         List<World> a = new ArrayList<>();
-        for (ServerWorld w : worlds) {
+        for (net.minecraft.world.server.ServerWorld w : worlds) {
             if (w.getDimensionKey() != net.minecraft.world.World.OVERWORLD &&
                     w.getDimensionKey() != net.minecraft.world.World.THE_NETHER &&
                     w.getDimensionKey() != net.minecraft.world.World.THE_END)
                 a.add(new World(w));
         }
-        return (World[]) a.toArray();
+        return (ServerWorld[]) a.toArray();
     }
 
     public static boolean checkServerNonNull() {
@@ -89,29 +88,29 @@ public class ProgramUtils {
         return call(new BlockPos(x, y, z));
     }
 
-    public static World getOverworld() {
+    public static ServerWorld getOverworld() {
         return overworld;
     }
 
-    public static World getNether() {
+    public static ServerWorld getNether() {
         return nether;
     }
 
-    public static World getTheEnd() {
+    public static ServerWorld getTheEnd() {
         return the_end;
     }
 
-    public static World[] getOtherWorlds() {
+    public static ServerWorld[] getOtherWorlds() {
         return getOthers();
     }
 
-    public static World[] getWorlds() {
-        List<World> a = new ArrayList<>();
+    public static ServerWorld[] getWorlds() {
+        List<ServerWorld> a = new ArrayList<>();
         a.add(overworld);
         a.add(nether);
         a.add(the_end);
         a.addAll(Arrays.asList(getOthers()));
-        return (World[]) a.toArray();
+        return (ServerWorld[]) a.toArray();
     }
 
     public static List<Player> getPlayers() {

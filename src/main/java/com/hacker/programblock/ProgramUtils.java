@@ -16,16 +16,7 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("all")
 public class ProgramUtils {
-    private static final ServerWorld overworld;
-    private static final ServerWorld nether;
-    private static final ServerWorld the_end;
     public static final UUID DUMMY_UUID = Util.DUMMY_UUID;
-
-    static {
-        overworld = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.OVERWORLD)));
-        nether = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_NETHER)));
-        the_end = new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_END)));
-    }
 
     private static ServerWorld[] getOthers() {
         Iterable<net.minecraft.world.server.ServerWorld> worlds = Hacker.server.getWorlds();
@@ -52,7 +43,7 @@ public class ProgramUtils {
     }
 
     public static void callAsync(BlockPos pos, Consumer<Object> callback) {
-        callAsync(pos, overworld, callback, null);
+        callAsync(pos, getOverworld(), callback, null);
     }
 
     public static void callAsync(int x, int y, int z, Consumer<Object> callback) {
@@ -89,15 +80,15 @@ public class ProgramUtils {
     }
 
     public static ServerWorld getOverworld() {
-        return overworld;
+        return new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.OVERWORLD)));
     }
 
     public static ServerWorld getNether() {
-        return nether;
+        return new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_NETHER)));
     }
 
     public static ServerWorld getTheEnd() {
-        return the_end;
+        return new ServerWorld(Objects.requireNonNull(Hacker.server.getWorld(net.minecraft.world.World.THE_END)));
     }
 
     public static ServerWorld[] getOtherWorlds() {
@@ -106,9 +97,9 @@ public class ProgramUtils {
 
     public static ServerWorld[] getWorlds() {
         List<ServerWorld> a = new ArrayList<>();
-        a.add(overworld);
-        a.add(nether);
-        a.add(the_end);
+        a.add(getOverworld());
+        a.add(getNether());
+        a.add(getTheEnd());
         a.addAll(Arrays.asList(getOthers()));
         return (ServerWorld[]) a.toArray();
     }

@@ -15,7 +15,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'com.hacker'
-version = 'beta-0.1.0'
+version = 'beta-0.2.0'
 archivesBaseName = 'programblock'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'

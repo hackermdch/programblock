@@ -194,4 +194,140 @@ public class ProgramUtils {
         net.minecraft.item.Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(id));
         return i != null ? new Item(i) : null;
     }
+
+    private static double lengthSq(double x, double y, double z) {
+        return x * x + y * y + z * z;
+    }
+
+    public static boolean setBlock(BlockPos pos, BlockState state) {
+        return setBlock(getOverworld(), pos, state);
+    }
+
+    public static boolean setBlock(BlockPos pos, Block block) {
+        return setBlock(getOverworld(), pos, block.getDefaultState());
+    }
+
+    public static boolean setBlock(World world, BlockPos pos, BlockState state) {
+        return world.setBlockState(pos, state);
+    }
+
+    public static int makeSphereC(BlockPos pos, BlockState block, double radiusX, double radiusY, double radiusZ) {
+        return makeSphereC(pos, block, radiusX, radiusY, radiusZ, true);
+    }
+
+    public static void makeSphere(BlockPos pos, BlockState block, double radiusX, double radiusY, double radiusZ) {
+        makeSphere(pos, block, radiusX, radiusY, radiusZ, true);
+    }
+
+    public static int makeSphereC(BlockPos pos, BlockState block, double radiusX, double radiusY, double radiusZ, boolean filled) {
+        int affected = 0;
+        radiusX += 0.5D;
+        radiusY += 0.5D;
+        radiusZ += 0.5D;
+        double invRadiusX = 1.0D / radiusX;
+        double invRadiusY = 1.0D / radiusY;
+        double invRadiusZ = 1.0D / radiusZ;
+        int ceilRadiusX = (int) Math.ceil(radiusX);
+        int ceilRadiusY = (int) Math.ceil(radiusY);
+        int ceilRadiusZ = (int) Math.ceil(radiusZ);
+        double nextXn = 0.0D;
+        int x;
+        l1:
+        for (x = 0; x <= ceilRadiusX; x++) {
+            double xn = nextXn;
+            nextXn = (x + 1) * invRadiusX;
+            double nextYn = 0.0D;
+            int y;
+            l2:
+            for (y = 0; y <= ceilRadiusY; y++) {
+                double yn = nextYn;
+                nextYn = (y + 1) * invRadiusY;
+                double nextZn = 0.0D;
+                for (int z = 0; z <= ceilRadiusZ; z++) {
+                    double zn = nextZn;
+                    nextZn = (z + 1) * invRadiusZ;
+                    double distanceSq = lengthSq(xn, yn, zn);
+                    if (distanceSq > 1.0D) {
+                        if (z == 0) {
+                            if (y == 0)
+                                break l1;
+                            break l2;
+                        }
+                        break;
+                    }
+                    if (filled ||
+                            lengthSq(nextXn, yn, zn) > 1.0D || lengthSq(xn, nextYn, zn) > 1.0D || lengthSq(xn, yn, nextZn) > 1.0D) {
+                        if (setBlock(pos.add(x, y, z), block))
+                            affected++;
+                        if (setBlock(pos.add(-x, y, z), block))
+                            affected++;
+                        if (setBlock(pos.add(x, -y, z), block))
+                            affected++;
+                        if (setBlock(pos.add(x, y, -z), block))
+                            affected++;
+                        if (setBlock(pos.add(-x, -y, z), block))
+                            affected++;
+                        if (setBlock(pos.add(x, -y, -z), block))
+                            affected++;
+                        if (setBlock(pos.add(-x, y, -z), block))
+                            affected++;
+                        if (setBlock(pos.add(-x, -y, -z), block))
+                            affected++;
+                    }
+                }
+            }
+        }
+        return affected;
+    }
+
+    public static void makeSphere(BlockPos pos, BlockState block, double radiusX, double radiusY, double radiusZ, boolean filled) {
+        radiusX += 0.5D;
+        radiusY += 0.5D;
+        radiusZ += 0.5D;
+        double invRadiusX = 1.0D / radiusX;
+        double invRadiusY = 1.0D / radiusY;
+        double invRadiusZ = 1.0D / radiusZ;
+        int ceilRadiusX = (int) Math.ceil(radiusX);
+        int ceilRadiusY = (int) Math.ceil(radiusY);
+        int ceilRadiusZ = (int) Math.ceil(radiusZ);
+        double nextXn = 0.0D;
+        int x;
+        l1:
+        for (x = 0; x <= ceilRadiusX; x++) {
+            double xn = nextXn;
+            nextXn = (x + 1) * invRadiusX;
+            double nextYn = 0.0D;
+            int y;
+            l2:
+            for (y = 0; y <= ceilRadiusY; y++) {
+                double yn = nextYn;
+                nextYn = (y + 1) * invRadiusY;
+                double nextZn = 0.0D;
+                for (int z = 0; z <= ceilRadiusZ; z++) {
+                    double zn = nextZn;
+                    nextZn = (z + 1) * invRadiusZ;
+                    double distanceSq = lengthSq(xn, yn, zn);
+                    if (distanceSq > 1.0D) {
+                        if (z == 0) {
+                            if (y == 0)
+                                break l1;
+                            break l2;
+                        }
+                        break;
+                    }
+                    if (filled ||
+                            lengthSq(nextXn, yn, zn) > 1.0D || lengthSq(xn, nextYn, zn) > 1.0D || lengthSq(xn, yn, nextZn) > 1.0D) {
+                        setBlock(pos.add(x, y, z), block);
+                        setBlock(pos.add(-x, y, z), block);
+                        setBlock(pos.add(x, -y, z), block);
+                        setBlock(pos.add(x, y, -z), block);
+                        setBlock(pos.add(-x, -y, z), block);
+                        setBlock(pos.add(x, -y, -z), block);
+                        setBlock(pos.add(-x, y, -z), block);
+                        setBlock(pos.add(-x, -y, -z), block);
+                    }
+                }
+            }
+        }
+    }
 }

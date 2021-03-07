@@ -217,6 +217,9 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 "class " + getClassName() + " implements ProgramFunction {\n" +
                 "\tprivate Map<String,Object> args=new HashMap<>();\n" +
                 "\tprivate Object retval;\n" +
+                "\tprivate final int x=" + getPos().getX() + ";\n" +
+                "\tprivate final int y=" + getPos().getY() + ";\n" +
+                "\tprivate final int z=" + getPos().getZ() + ";\n" +
                 "\tpublic " + getClassName() + "(){}\n" +
                 "\tpublic void execute() throws Exception {\n" + "\t\ttry {\n" + "\t\t" + code.replaceAll("\n", "\n\t\t") + "\t\t}catch(Exception e){throw e;}" + "\n\t}\n" +
                 "\tprivate int getX(){return " + getPos().getX() + ";}\n" +

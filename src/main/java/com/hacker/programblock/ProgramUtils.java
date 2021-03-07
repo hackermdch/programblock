@@ -149,21 +149,21 @@ public class ProgramUtils {
         return b.getDefaultState();
     }
 
-    public static List<BlockState> getBlocksState(int... ids) {
+    public static List<BlockState> getBlockStates(int... ids) {
         List<Block> l = getBlocks(ids);
         List<BlockState> l2 = new ArrayList<>();
         l.forEach((e) -> l2.add(e.getDefaultState()));
         return l2;
     }
 
-    public static List<BlockState> getBlocksState() {
+    public static List<BlockState> getBlockStates() {
         List<Block> l = getBlocks();
         List<BlockState> l2 = new ArrayList<>();
         l.forEach((e) -> l2.add(e.getDefaultState()));
         return l2;
     }
 
-    public static List<BlockState> getBlocksState(String... ids) {
+    public static List<BlockState> getBlockStates(String... ids) {
         List<Block> l = getBlocks(ids);
         List<BlockState> l2 = new ArrayList<>();
         l.forEach((e) -> l2.add(e.getDefaultState()));

@@ -34,6 +34,7 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -51,6 +52,24 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
 
     public boolean func_242278_a(BlockPos p_242278_1_, BlockState p_242278_2_) {
         return target.func_242278_a(p_242278_1_.getTarget(), p_242278_2_.getTarget());
+    }
+
+    public Set<String> getTags() {
+        return target.getTags();
+    }
+
+    public void setTags(Set<String> tags) {
+        Set<String> tags1 = target.getTags();
+        tags1.clear();
+        tags1.addAll(tags);
+    }
+
+    public CompoundNBT writeNBT(CompoundNBT compound) {
+        return target.writeWithoutTypeId(compound);
+    }
+
+    public void readNBT(CompoundNBT compound) {
+        target.read(compound);
     }
 
     public int getTeamColor() {

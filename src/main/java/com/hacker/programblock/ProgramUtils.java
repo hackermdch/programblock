@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("all")
 public class ProgramUtils {
     public static final UUID DUMMY_UUID = Util.DUMMY_UUID;
+    protected static Map<String, Object> global;
 
     private static ServerWorld[] getOthers() {
         Iterable<net.minecraft.world.server.ServerWorld> worlds = Hacker.server.getWorlds();
@@ -28,6 +29,10 @@ public class ProgramUtils {
                 a.add(new World(w));
         }
         return (ServerWorld[]) a.toArray();
+    }
+
+    public static Map<String, Object> getGlobal() {
+        return global;
     }
 
     public static boolean checkServerNonNull() {
@@ -244,6 +249,17 @@ public class ProgramUtils {
 
     public static boolean setBlock(World world, BlockPos pos, BlockState state) {
         return world.setBlockState(pos, state);
+    }
+
+    public static <T extends Entity> EntityType<T> getEntityType(String id) {
+        net.minecraft.entity.EntityType<?> t = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
+        return t != null ? new EntityType<T>(t) : new EntityType<T>(net.minecraft.entity.EntityType.PIG);
+    }
+
+    public static Entity createEntity(String id, World world) throws InstantiationException, IllegalAccessException {
+        Entity e = getEntityType(id).create(world);
+        world.addEntity(e);
+        return e;
     }
 
     public static int makeSphereC(BlockPos pos, BlockState block, double radiusX, double radiusY, double radiusZ) {

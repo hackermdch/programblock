@@ -44,6 +44,10 @@ public class World implements IProxy<net.minecraft.world.World> {
         return p;
     }
 
+    public boolean addEntity(Entity entity) {
+        return target.addEntity(entity.getTarget());
+    }
+
     public boolean isRemote() {
         return target.isRemote();
     }

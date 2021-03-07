@@ -19,6 +19,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+
 @SuppressWarnings("all")
 @Mod(Hacker.MOD_ID)
 public class Hacker {
@@ -37,6 +39,7 @@ public class Hacker {
             @SubscribeEvent
             public void onServerStarted(FMLServerStartedEvent event) {
                 server = event.getServer();
+                ProgramUtils.global = new HashMap<>();
             }
 
             @SubscribeEvent

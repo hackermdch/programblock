@@ -135,9 +135,44 @@ public class ProgramUtils {
         return new TranslationTextComponent(str, args);
     }
 
+    public static BlockPos pos(int x, int y, int z) {
+        return new BlockPos(x, y, z);
+    }
+
+    public static BlockState getBlockState(String id) {
+        Block b = getBlock(id);
+        return b.getDefaultState();
+    }
+
+    public static BlockState getBlockState(int id) {
+        Block b = getBlock(id);
+        return b.getDefaultState();
+    }
+
+    public static List<BlockState> getBlocksState(int... ids) {
+        List<Block> l = getBlocks(ids);
+        List<BlockState> l2 = new ArrayList<>();
+        l.forEach((e) -> l2.add(e.getDefaultState()));
+        return l2;
+    }
+
+    public static List<BlockState> getBlocksState() {
+        List<Block> l = getBlocks();
+        List<BlockState> l2 = new ArrayList<>();
+        l.forEach((e) -> l2.add(e.getDefaultState()));
+        return l2;
+    }
+
+    public static List<BlockState> getBlocksState(String... ids) {
+        List<Block> l = getBlocks(ids);
+        List<BlockState> l2 = new ArrayList<>();
+        l.forEach((e) -> l2.add(e.getDefaultState()));
+        return l2;
+    }
+
     public static Block getBlock(String id) {
         net.minecraft.block.Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
-        return b != null ? new Block(b) : null;
+        return b != null ? new Block(b) : new Block(Registry.BLOCK.getByValue(0));
     }
 
     public static Block getBlock(int id) {
@@ -161,7 +196,7 @@ public class ProgramUtils {
     public static List<Block> getBlocks(String... ids) {
         List<Block> l = new ArrayList<>();
         for (String s : ids)
-            l.add(new Block(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s))));
+            l.add(getBlock(s));
         return l;
     }
 
@@ -180,7 +215,7 @@ public class ProgramUtils {
     public static List<Item> getItems(String... ids) {
         List<Item> l = new ArrayList<>();
         for (String s : ids)
-            l.add(new Item(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s))));
+            l.add(getItem(s));
         return l;
     }
 
@@ -192,7 +227,7 @@ public class ProgramUtils {
 
     public static Item getItem(String id) {
         net.minecraft.item.Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(id));
-        return i != null ? new Item(i) : null;
+        return i != null ? new Item(i) : new Item(Registry.ITEM.getByValue(0));
     }
 
     private static double lengthSq(double x, double y, double z) {

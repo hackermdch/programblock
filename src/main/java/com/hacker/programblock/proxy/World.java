@@ -16,14 +16,11 @@ import net.minecraft.world.storage.MapData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class World implements IProxy<net.minecraft.world.World> {
     private final net.minecraft.world.World target;
 
@@ -42,6 +39,10 @@ public class World implements IProxy<net.minecraft.world.World> {
         List<net.minecraft.entity.Entity> l = target.getEntitiesInAABBexcluding(entityIn.getTarget(), boundingBox.getTarget(), predicate != null ? (e) -> predicate.test(new Entity(e)) : null);
         l.forEach((e) -> p.add(new Entity(e)));
         return p;
+    }
+
+    public Random getRandom() {
+        return target.rand;
     }
 
     public boolean addEntity(Entity entity) {

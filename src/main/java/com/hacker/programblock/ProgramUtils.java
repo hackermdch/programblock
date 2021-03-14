@@ -132,12 +132,53 @@ public class ProgramUtils {
         print(obj != null ? obj.toString() : "null");
     }
 
-    public static StringTextComponent from(String str) {
-        return new StringTextComponent(str);
+    public static void print(TextComponent text) {
+        print(text != null ? text.getTarget().getString() : "null");
     }
 
-    public static TranslationTextComponent trans(String str, Object... args) {
-        return new TranslationTextComponent(str, args);
+    public static TextComponent from(String str) {
+        return new TextComponent(new StringTextComponent(str));
+    }
+
+    public static TextComponent trans(String str, Object... args) {
+        return new TextComponent(new TranslationTextComponent(str, args));
+    }
+
+    public static TextFormatting formatting(String name) {
+        TextFormatting f = TextFormatting.getValueByName(name);
+        return f != null ? f : TextFormatting.WHITE;
+    }
+
+    public static <T> T[] arrayOf(T... args) {
+        return args;
+    }
+
+    public static int[] iArray(int... args) {
+        return args;
+    }
+
+    public static byte[] bArray(byte... args) {
+        return args;
+    }
+
+    public static char[] cArray(char... args) {
+        return args;
+    }
+
+    public static float[] fArray(float... args) {
+        return args;
+    }
+
+    public static double[] dArray(double... args) {
+        return args;
+    }
+
+    public static short[] uiArray(short... args) {
+        return args;
+    }
+
+    public static long[] lArray(long... args) {
+        return args;
     }
 
     public static BlockPos pos(int x, int y, int z) {
@@ -249,6 +290,10 @@ public class ProgramUtils {
 
     public static boolean setBlock(World world, BlockPos pos, BlockState state) {
         return world.setBlockState(pos, state);
+    }
+
+    public static int color(int r, int g, int b) {
+        return b + 256 * g + 65536 * r;
     }
 
     public static <T extends Entity> EntityType<T> getEntityType(String id) {

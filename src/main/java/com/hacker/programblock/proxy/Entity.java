@@ -890,8 +890,8 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
         return target.replaceItemInInventory(inventorySlot, itemStackIn);
     }
 
-    public void sendMessage(ITextComponent component, UUID senderUUID) {
-        target.sendMessage(component, senderUUID);
+    public void sendMessage(TextComponent component, UUID senderUUID) {
+        target.sendMessage(component.getTarget(), senderUUID);
     }
 
     public boolean isImmuneToExplosions() {

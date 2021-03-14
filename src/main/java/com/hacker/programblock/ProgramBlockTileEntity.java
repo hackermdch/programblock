@@ -213,6 +213,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 "import com.hacker.programblock.proxy.*;\n" +
                 "import java.util.*;\n" +
                 "import java.math.*;\n" +
+                "import java.text.*;\n"+
                 "import com.hacker.programblock.ProgramFunction;\n" +
                 "import static com.hacker.programblock.ProgramUtils.*;\n" +
                 "class " + getClassName() + " implements ProgramFunction {\n" +

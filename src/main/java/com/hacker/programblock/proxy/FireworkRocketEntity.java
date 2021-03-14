@@ -1,8 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 
@@ -19,11 +17,7 @@ public class FireworkRocketEntity extends Entity {
     }
 
     public FireworkRocketEntity(World worldIn, double x, double y, double z, Firework firework) {
-        net.minecraft.item.ItemStack s = new net.minecraft.item.ItemStack(Items.FIREWORK_ROCKET, 1);
-        CompoundNBT firw = new CompoundNBT();
-        firw.put("Fireworks", firework.get());
-        s.setTag(firw);
-        target = new net.minecraft.entity.projectile.FireworkRocketEntity(worldIn.getTarget(), x, y, z, s);
+        target = new net.minecraft.entity.projectile.FireworkRocketEntity(worldIn.getTarget(), x, y, z, firework.get().getTarget());
     }
 
     public FireworkRocketEntity(World worldIn, double x, double y, double z, ItemStack givenItem) {

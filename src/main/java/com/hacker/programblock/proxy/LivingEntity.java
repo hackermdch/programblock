@@ -29,21 +29,25 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("all")
 public class LivingEntity extends Entity {
-    private final net.minecraft.entity.LivingEntity target;
+    protected net.minecraft.entity.LivingEntity target;
 
     protected LivingEntity() {
-        target = null;
     }
 
     public LivingEntity(@Nonnull net.minecraft.entity.LivingEntity target) {
         super(target);
-        this.target = target;
     }
 
     @Nonnull
     @Override
     public net.minecraft.entity.LivingEntity getTarget() {
         return target;
+    }
+
+
+    protected void setTarget(net.minecraft.entity.Entity target) {
+        super.setTarget(target);
+        this.target = (net.minecraft.entity.LivingEntity) target;
     }
 
     public void onKillCommand() {

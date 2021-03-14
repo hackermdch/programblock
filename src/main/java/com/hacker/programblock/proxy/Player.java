@@ -26,10 +26,16 @@ import java.util.Collection;
 
 @SuppressWarnings("all")
 public class Player extends LivingEntity {
-    private final PlayerEntity target;
+    protected PlayerEntity target;
 
     public Player(@Nonnull PlayerEntity target) {
-        this.target = target;
+        setTarget(target);
+    }
+
+    @Override
+    protected void setTarget(net.minecraft.entity.Entity target) {
+        super.setTarget(target);
+        this.target = (PlayerEntity) target;
     }
 
     @Nonnull

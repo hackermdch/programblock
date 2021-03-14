@@ -1,5 +1,6 @@
 package com.hacker.programblock.proxy;
 
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 
@@ -43,7 +44,11 @@ public class Firework {
         return this;
     }
 
-    CompoundNBT get() {
-        return nbt;
+    ItemStack get() {
+        net.minecraft.item.ItemStack s = new net.minecraft.item.ItemStack(Items.FIREWORK_ROCKET, 1);
+        CompoundNBT firw = new CompoundNBT();
+        firw.put("Fireworks", nbt);
+        s.setTag(firw);
+        return new ItemStack(s);
     }
 }

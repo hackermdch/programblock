@@ -11,13 +11,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
 @SuppressWarnings("all")
 public class ProgramUtils {
     public static final UUID DUMMY_UUID = Util.DUMMY_UUID;
-    protected static Map<String, Object> global;
+    static Map<String, Object> global;
 
     private static ServerWorld[] getOthers() {
         Iterable<net.minecraft.world.server.ServerWorld> worlds = Hacker.server.getWorlds();
@@ -31,7 +32,7 @@ public class ProgramUtils {
         return (ServerWorld[]) a.toArray();
     }
 
-    public static Map<String, Object> getGlobal() {
+    public static Map<String, Object> global() {
         return global;
     }
 
@@ -179,6 +180,10 @@ public class ProgramUtils {
 
     public static long[] lArray(long... args) {
         return args;
+    }
+
+    public static String dateTime(String format) {
+        return new SimpleDateFormat(format).format(new Date());
     }
 
     public static BlockPos pos(int x, int y, int z) {

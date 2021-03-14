@@ -39,14 +39,17 @@ import java.util.UUID;
 
 @SuppressWarnings("all")
 public class Entity implements IProxy<net.minecraft.entity.Entity> {
-    private final net.minecraft.entity.Entity target;
+    protected net.minecraft.entity.Entity target;
 
     public Entity(@Nonnull net.minecraft.entity.Entity target) {
         this.target = Objects.requireNonNull(target);
     }
 
     protected Entity() {
-        target = null;
+    }
+
+    protected void setTarget(net.minecraft.entity.Entity target) {
+        this.target = target;
     }
 
     @Nonnull

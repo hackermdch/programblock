@@ -37,12 +37,16 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class Entity implements IProxy<net.minecraft.entity.Entity> {
     private final net.minecraft.entity.Entity target;
 
     public Entity(@Nonnull net.minecraft.entity.Entity target) {
         this.target = Objects.requireNonNull(target);
+    }
+
+    protected Entity() {
+        target = null;
     }
 
     @Nonnull

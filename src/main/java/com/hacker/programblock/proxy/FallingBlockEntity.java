@@ -7,13 +7,11 @@ public class FallingBlockEntity extends Entity {
     private final net.minecraft.entity.item.FallingBlockEntity target;
 
     public FallingBlockEntity(@Nonnull net.minecraft.entity.item.FallingBlockEntity target) {
-        super(target);
         this.target = target;
     }
 
     public FallingBlockEntity(World worldIn, double x, double y, double z, BlockState blockState) {
-        super(new net.minecraft.entity.item.FallingBlockEntity(worldIn.getTarget(), x, y, z, blockState.getTarget()));
-        this.target = (net.minecraft.entity.item.FallingBlockEntity) super.getTarget();
+        target = new net.minecraft.entity.item.FallingBlockEntity(worldIn.getTarget(), x, y, z, blockState.getTarget());
         target.fallTime = 1;
     }
 

@@ -17,6 +17,11 @@ public class Firework {
         nbt.put("Explosions", explosions);
     }
 
+    public Firework(int flight) {
+        this();
+        setFlight(flight);
+    }
+
     public Firework setFlight(int flight) {
         nbt.putByte("Flight", (byte) Math.min(Math.max(-128, flight), 127));
         return this;

@@ -29,7 +29,6 @@ public class Player extends LivingEntity {
     private final PlayerEntity target;
 
     public Player(@Nonnull PlayerEntity target) {
-        super(target);
         this.target = target;
     }
 

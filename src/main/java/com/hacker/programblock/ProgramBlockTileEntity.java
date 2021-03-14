@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 @SuppressWarnings("all")
 public final class ProgramBlockTileEntity extends TileEntity {
     public String code;
-    private int classnum = -1;
     private static final Map<BlockPos, Thread> threads = new HashMap<>();
+    public static final Map<BlockPos, Integer> counter = new HashMap<>();
     public boolean powered = false;
     protected boolean redstone_control = true;
 
@@ -190,7 +190,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
     }
 
     public String getClassName() {
-        return ("program$" + getPos().getX() + getPos().getY() + getPos().getZ() + "$" + classnum).replaceAll("-", "a");
+        return ("program$" + getPos().getX() + getPos().getY() + getPos().getZ() + "$" + counter.getOrDefault(getPos(), -1)).replaceAll("-", "a");
     }
 
     public void update() {
@@ -201,7 +201,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
             e.printStackTrace();
         }
         Compiler.getClassLoader().removeFileObject("com.hacker.dy." + getClassName());
-        classnum++;
+        counter.put(getPos(), counter.getOrDefault(getPos(), -1) + 1);
     }
 
     public String genSource() {
@@ -212,7 +212,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
         return "package com.hacker.dy;\n" +
                 "import com.hacker.programblock.proxy.*;\n" +
                 "import java.util.*;\n" +
-                "import java.math.*;\n"+
+                "import java.math.*;\n" +
                 "import com.hacker.programblock.ProgramFunction;\n" +
                 "import static com.hacker.programblock.ProgramUtils.*;\n" +
                 "class " + getClassName() + " implements ProgramFunction {\n" +

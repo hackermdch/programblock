@@ -31,6 +31,10 @@ import java.util.function.Predicate;
 public class LivingEntity extends Entity {
     private final net.minecraft.entity.LivingEntity target;
 
+    protected LivingEntity() {
+        target = null;
+    }
+
     public LivingEntity(@Nonnull net.minecraft.entity.LivingEntity target) {
         super(target);
         this.target = target;

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "programblock:block/event_block"
+    }
+  }
+}

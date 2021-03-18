@@ -1,5 +1,6 @@
 {
   "block.programblock.program_block": "Program Block",
+  "block.programblock.event_block": "Event Block",
   "program.compile_failed": "Compile code with: %1$s",
   "program.compile_success": "Compile Success",
   "program.save": "Save and compile",

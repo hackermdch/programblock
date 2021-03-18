@@ -15,7 +15,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 @SuppressWarnings({"deprecation", "NullableProblems"})
 public class ProgramBlock extends ContainerBlock {
@@ -60,11 +59,6 @@ public class ProgramBlock extends ContainerBlock {
     @Override
     public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
         ProgramBlockTileEntity.removeThreadIn(pos);
-    }
-
-    @Override
-    public void dropXpOnBlockBreak(ServerWorld worldIn, BlockPos pos, int amount) {
-        super.dropXpOnBlockBreak(worldIn, pos, amount);
     }
 
     public TileEntity createNewTileEntity(IBlockReader worldIn) {

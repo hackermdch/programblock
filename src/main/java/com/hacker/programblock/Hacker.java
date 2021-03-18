@@ -31,8 +31,11 @@ public class Hacker {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
     public static final RegistryObject<Block> programblock = BLOCKS.register("program_block", ProgramBlock::new);
+    public static final RegistryObject<Block> eventblock = BLOCKS.register("event_block", EventBlock::new);
     public static final RegistryObject<Item> programblock_item = ITEMS.register("program_block", () -> new OperatorOnlyItem(programblock.get(), new Item.Properties().rarity(gold)));
+    public static final RegistryObject<Item> eventblock_item = ITEMS.register("event_block", () -> new OperatorOnlyItem(eventblock.get(), new Item.Properties().rarity(gold)));
     public static final RegistryObject<TileEntityType<ProgramBlockTileEntity>> programblock_tile = TILE_ENTITY_TYPES.register("program_block", () -> TileEntityType.Builder.create(ProgramBlockTileEntity::new).build(null));
+    public static final RegistryObject<TileEntityType<EventBlockTileEntity>> eventblock_tile = TILE_ENTITY_TYPES.register("event_block", () -> TileEntityType.Builder.create(EventBlockTileEntity::new).build(null));
 
     public Hacker() {
         MinecraftForge.EVENT_BUS.register(new Object() {

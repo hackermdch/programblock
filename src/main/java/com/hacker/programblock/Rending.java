@@ -6,17 +6,33 @@ import static org.lwjgl.opengl.GL20.*;
 
 class Rending {
     private static int program;
-    private static final String vsc = "#version 110\n" +
-            "attribute vec3 aPos;\n" +
-            "void main()\n" +
-            "{\n" +
-            "   gl_Position = vec4(aPos, 1.0);\n" +
+    //    private static final String vsc = "#version 330\n" +
+//            "layout (location = 0) in vec3 aPos;\n" +
+//            "out vec4 ourColor;\n" +
+//            "void main()\n" +
+//            "{\n" +
+//            "   gl_Position = vec4(aPos, 1.0);\n" +
+//            "   ourColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
+//            "}";
+//
+//    private static final String psc = " #version 330\n" +
+//            "in vec4 ourColor;\n" +
+//            "out vec4 FragColor;\n" +
+//            "void main()\n" +
+//            "{\n" +
+//            "   FragColor = ourColor;\n" +
+//            "}";
+    private static final String vsc = "#version 110" + '\n' +
+            "attribute vec3 aPos;" + '\n' +
+            "void main()" + '\n' +
+            "{" + '\n' +
+            "    gl_Position = vec4(aPos, 1.0);" + '\n' +
             "}";
 
-    private static final String psc = " #version 110\n" +
-            "void main()\n" +
-            "{\n" +
-            "   gl_FragColor = vec4(1.0, 0.5, 0.2, 1.0);\n" +
+    private static final String psc = "#version 110" + '\n' +
+            "void main()" + '\n' +
+            "{" + '\n' +
+            "   gl_FragColor = vec4(1.0, 0.5, 0.2, 1.0);" + '\n' +
             "}";
 
     static {
@@ -51,28 +67,30 @@ class Rending {
     }
 
     public static void draw() {
-        float[] vets = new float[]{
-                0.5f, 0.5f, 0f, 1.0f,0.0f,0.0f,
-                0.5f, -0.5f, 0f, 0.0f,1.0f,0.0f,
-                -0.5f, -0.5f, 0f, 0.0f,0.0f,1.0f
-//                -0.5f, 0.5f, 0
-        };
-//        int[] indices = {
-//                0, 1, 2,
-//                2, 3, 0
+//        float[] vets = new float[]{
+//                0, 0, 1,
+//                0, 100, 1,
+//                100, 100, 1,
 //        };
+        float[] vets = new float[]{
+                0, 0.5f, 0,
+                0.5f, -0.5f, 0,
+                -0.5f, -0.5f, 0,
+        };
         int vbo = glGenBuffers();
+        glPushAttrib(GL_ALL_ATTRIB_BITS);
+        glPushMatrix();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vets, GL_STATIC_DRAW);
-//        int ebo = glGenBuffers();
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-//        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
-//        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-//        glUseProgram(program);
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+        glEnableVertexAttribArray(0);
+        glUseProgram(program);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        glFlush();
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glUseProgram(0);
+        glDisableVertexAttribArray(0);
+        glPopMatrix();
+        glPopAttrib();
     }
 }

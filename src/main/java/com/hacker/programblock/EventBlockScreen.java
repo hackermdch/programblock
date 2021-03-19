@@ -15,6 +15,6 @@ public class EventBlockScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        Rending.draw();
+        Rendering.draw();
     }
 }

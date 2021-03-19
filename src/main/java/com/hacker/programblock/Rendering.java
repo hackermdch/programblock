@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 
 import static org.lwjgl.opengl.GL30.*;
 
-class Rending {
+class Rendering {
     private static final int program;
     private static final String vsc = "#version 330 core\n" +
             "layout (location = 0) in vec3 aPos;\n" +

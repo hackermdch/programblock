@@ -2,37 +2,26 @@ package com.hacker.programblock;
 
 import org.apache.logging.log4j.LogManager;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 class Rending {
-    private static int program;
-    //    private static final String vsc = "#version 330\n" +
-//            "layout (location = 0) in vec3 aPos;\n" +
-//            "out vec4 ourColor;\n" +
-//            "void main()\n" +
-//            "{\n" +
-//            "   gl_Position = vec4(aPos, 1.0);\n" +
-//            "   ourColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-//            "}";
-//
-//    private static final String psc = " #version 330\n" +
-//            "in vec4 ourColor;\n" +
-//            "out vec4 FragColor;\n" +
-//            "void main()\n" +
-//            "{\n" +
-//            "   FragColor = ourColor;\n" +
-//            "}";
-    private static final String vsc = "#version 110" + '\n' +
-            "attribute vec3 pos;" + '\n' +
-            "void main()" + '\n' +
-            "{" + '\n' +
-            "    gl_Position = vec4(pos, 1.0);" + '\n' +
+    private static final int program;
+    private static final String vsc = "#version 330 core\n" +
+            "layout (location = 0) in vec3 aPos;\n" +
+            "layout (location = 1) in vec4 color;\n" +
+            "out vec4 ourColor;\n" +
+            "void main()\n" +
+            "{\n" +
+            "   gl_Position = vec4(aPos, 1.0);\n" +
+            "   ourColor = color;\n" +
             "}";
 
-    private static final String psc = "#version 110" + '\n' +
-            "void main()" + '\n' +
-            "{" + '\n' +
-            "   gl_FragColor = vec4(1.0, 0.5, 0.2, 1.0);" + '\n' +
+    private static final String psc = " #version 330 core\n" +
+            "in vec4 ourColor;\n" +
+            "out vec4 FragColor;\n" +
+            "void main()\n" +
+            "{\n" +
+            "   FragColor = ourColor;\n" +
             "}";
 
     static {
@@ -68,9 +57,9 @@ class Rending {
 
     public static void draw() {
         float[] vertices = {
-                0.0f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
+                0.0f, 0.5f, 0.0f, 1, 0, 0, 1,
+                -0.5f, -0.5f, 0.0f, 0, 1, 0, 1,
+                0.5f, -0.5f, 0.0f, 0, 0, 1, 1
         };
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glPushMatrix();
@@ -79,10 +68,18 @@ class Rending {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, 0);
+        int vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
+
+        glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glUseProgram(0);
         glPopMatrix();

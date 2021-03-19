@@ -82,14 +82,15 @@ class Rending {
         glPushMatrix();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vets, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
-        glEnableVertexAttribArray(0);
         glUseProgram(program);
+        int pos = glGetAttribLocation(program, "aPos");
+        glEnableVertexAttribArray(pos);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(pos, 3, GL_FLOAT, false, 0, 0);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glFlush();
+        glDisableVertexAttribArray(pos);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glUseProgram(0);
-        glDisableVertexAttribArray(0);
         glPopMatrix();
         glPopAttrib();
     }

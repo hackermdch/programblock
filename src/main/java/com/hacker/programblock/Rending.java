@@ -68,9 +68,9 @@ class Rending {
 
     public static void draw() {
         float[] vertices = {
-                -0.8f, -0.8f, 0.0f,
-                0.8f, -0.8f, 0.0f,
-                0.0f, 0.8f, 0.0f
+                0.0f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f
         };
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glPushMatrix();

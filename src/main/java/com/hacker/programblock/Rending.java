@@ -23,10 +23,10 @@ class Rending {
 //            "   FragColor = ourColor;\n" +
 //            "}";
     private static final String vsc = "#version 110" + '\n' +
-            "attribute vec3 aPos;" + '\n' +
+            "attribute vec3 pos;" + '\n' +
             "void main()" + '\n' +
             "{" + '\n' +
-            "    gl_Position = vec4(aPos, 1.0);" + '\n' +
+            "    gl_Position = vec4(pos, 1.0);" + '\n' +
             "}";
 
     private static final String psc = "#version 110" + '\n' +
@@ -67,28 +67,22 @@ class Rending {
     }
 
     public static void draw() {
-//        float[] vets = new float[]{
-//                0, 0, 1,
-//                0, 100, 1,
-//                100, 100, 1,
-//        };
-        float[] vets = new float[]{
-                0, 0.5f, 0,
-                0.5f, -0.5f, 0,
-                -0.5f, -0.5f, 0,
+        float[] vertices = {
+                -0.8f, -0.8f, 0.0f,
+                0.8f, -0.8f, 0.0f,
+                0.0f, 0.8f, 0.0f
         };
-        int vbo = glGenBuffers();
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glPushMatrix();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vets, GL_STATIC_DRAW);
         glUseProgram(program);
-        int pos = glGetAttribLocation(program, "aPos");
-        glEnableVertexAttribArray(pos);
+        int vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(pos, 3, GL_FLOAT, false, 0, 0);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, 0);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableVertexAttribArray(pos);
+        glDisableClientState(GL_VERTEX_ARRAY);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glUseProgram(0);
         glPopMatrix();

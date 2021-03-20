@@ -7,6 +7,12 @@ import net.minecraft.client.gui.screen.Screen;
 @SuppressWarnings("all")
 public class EventBlockScreen extends Screen {
     private final EventBlockTileEntity eventBlock;
+    private static final float[] bg = {
+            0.5f, 0, 0, 0.5f,
+            0, 0.5f, 0, 0.5f,
+            0, 0, 0.5f, 0.5f,
+            0, 0.5f, 0.5f, 0.5f
+    };
 
     public EventBlockScreen(EventBlockTileEntity eventBlock) {
         super(NarratorChatListener.EMPTY);
@@ -15,12 +21,6 @@ public class EventBlockScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        Rendering.drawRect(100, 100, 300, 300, null);
-        Rendering.drawRect(1820, 980, 100, 100, new float[]{
-                1, 0, 0, 1,
-                0, 1, 0, 1,
-                0, 0, 1, 1,
-                0, 1, 1, 1
-        });
+        Rendering.drawRect(0, 0, 1922, 1080, bg);
     }
 }

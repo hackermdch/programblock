@@ -30,6 +30,7 @@ class Rendering {
             "{\n" +
             "   FragColor = ourColor;\n" +
             "}";
+    private static final int[] rect = {0, 1, 2, 1, 0, 3};
 
     static {
         program = glCreateProgram();
@@ -79,6 +80,26 @@ class Rendering {
         glPopAttrib();
     }
 
+    public static void draw(float[] vertices, int[] indexs) {
+        begin();
+        int vbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        int vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+        int ebo = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexs, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        end();
+    }
+
     public static void drawRect(float x, float y, float width, float height, float[] colors) {
         if (colors == null)
             colors = new float[]{
@@ -93,23 +114,6 @@ class Rendering {
                 x + width, y + height, 0.0f, colors[8], colors[9], colors[10], colors[11],
                 x, y, 0f, colors[12], colors[13], colors[14], colors[15],
         };
-        begin();
-        int vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-        int vao = glGenVertexArrays();
-        glBindVertexArray(vao);
-        int[] inds = {0, 1, 2, 1, 0, 3};
-        int ebo = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, inds, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        end();
+        draw(vertices, rect);
     }
 }

@@ -23,6 +23,12 @@ public class ProgramBlockScreen extends Screen {
     protected Button control;
     private boolean redcol;
     private boolean openEdit = false;
+    private static final float[] bg = {
+            0.5f, 0, 0, 0.5f,
+            0, 0.5f, 0, 0.5f,
+            0, 0, 0.5f, 0.5f,
+            0, 0.5f, 0.5f, 0.5f
+    };
 
     public ProgramBlockScreen(ProgramBlockTileEntity programBlock) {
         super(NarratorChatListener.EMPTY);
@@ -130,7 +136,7 @@ public class ProgramBlockScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(matrixStack);
+        Rendering.drawRect(0, 0, 1922, 1080, bg);
         codes.render(matrixStack, mouseX, mouseY, partialTicks);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

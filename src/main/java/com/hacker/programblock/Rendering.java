@@ -2,7 +2,7 @@ package com.hacker.programblock;
 
 import org.apache.logging.log4j.LogManager;
 
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL33.*;
 
 class Rendering {
     private static final int program;
@@ -10,9 +10,16 @@ class Rendering {
             "layout (location = 0) in vec3 aPos;\n" +
             "layout (location = 1) in vec4 color;\n" +
             "out vec4 ourColor;\n" +
+            "const float w = 960;\n" +
+            "const float h = 540;\n" +
             "void main()\n" +
             "{\n" +
-            "   gl_Position = vec4(aPos, 1.0);\n" +
+            "   vec4 pos = vec4(aPos, 1.0);\n" +
+            "   float x = pos.x;\n" +
+            "   float y = pos.y;\n" +
+            "   pos.x = (x - w) / (w + 1);\n" +
+            "   pos.y = (h - y) / (h - 1);\n" +
+            "   gl_Position = pos;\n" +
             "   ourColor = color;\n" +
             "}";
 
@@ -64,12 +71,6 @@ class Rendering {
         glUseProgram(program);
     }
 
-    private static void EnableAA() {
-        glEnable(GL_POINT_SMOOTH);
-        glEnable(GL_LINE_SMOOTH);
-        glEnable(GL_POLYGON_SMOOTH);
-    }
-
     private static void end() {
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -78,32 +79,35 @@ class Rendering {
         glPopAttrib();
     }
 
-    public static void draw() {
+    public static void drawRect(float x, float y, float width, float height, float[] colors) {
+        if (colors == null)
+            colors = new float[]{
+                    0, 0, 0, 1,
+                    0, 0, 0, 1,
+                    0, 0, 0, 1,
+                    0, 0, 0, 1
+            };
         float[] vertices = {
-                0.5f, 0.5f, 0.0f, 1, 0, 0, 1f,
-                0.5f, -0.5f, 0.0f, 0, 1, 0, 1f,
-                -0.5f, -0.5f, 0.0f, 0, 0, 1, 1f,
-                -0.5f, 0.5f, 0f, 0, 1, 1, 1,
+                x + width, y, 0.0f, colors[0], colors[1], colors[2], colors[3],
+                y, y + height, 0.0f, colors[4], colors[5], colors[6], colors[7],
+                x + width, y + height, 0.0f, colors[8], colors[9], colors[10], colors[11],
+                x, y, 0f, colors[12], colors[13], colors[14], colors[15],
         };
         begin();
         int vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);
-        int[] inds = {0, 2, 1, 3, 2, 0};
+        int[] inds = {0, 1, 2, 1, 0, 3};
         int ebo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, inds, GL_STATIC_DRAW);
-
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
-
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         end();

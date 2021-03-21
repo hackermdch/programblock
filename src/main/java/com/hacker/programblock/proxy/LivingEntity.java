@@ -7,8 +7,6 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -146,8 +144,8 @@ public class LivingEntity extends Entity {
         return ((LivingEntityAccessor) target).invokedetermineNextAir(currentAir);
     }
 
-    protected int getExperiencePoints(PlayerEntity player) {
-        return ((LivingEntityAccessor) target).invokegetExperiencePoints(player);
+    protected int getExperiencePoints(Player player) {
+        return ((LivingEntityAccessor) target).invokegetExperiencePoints(player.getTarget());
     }
 
     protected boolean isPlayer() {
@@ -158,8 +156,8 @@ public class LivingEntity extends Entity {
         return target.getRevengeTimer();
     }
 
-    public void func_230246_e_(@Nullable PlayerEntity p_230246_1_) {
-        target.func_230246_e_(p_230246_1_);
+    public void func_230246_e_(@Nullable Player player) {
+        target.func_230246_e_(player != null ? player.getTarget() : null);
     }
 
     public void setRevengeTarget(@Nullable LivingEntity livingBase) {
@@ -579,7 +577,7 @@ public class LivingEntity extends Entity {
     }
 
     public void triggerItemPickupTrigger(ItemEntity item) {
-        target.triggerItemPickupTrigger(item);
+        target.triggerItemPickupTrigger(item.getTarget());
     }
 
     public void onItemPickup(Entity entityIn, int quantity) {
@@ -774,8 +772,8 @@ public class LivingEntity extends Entity {
         return target.curePotionEffects(curativeItem);
     }
 
-    public boolean shouldRiderFaceForward(PlayerEntity player) {
-        return target.shouldRiderFaceForward(player);
+    public boolean shouldRiderFaceForward(Player player) {
+        return target.shouldRiderFaceForward(player.getTarget());
     }
 
     protected void invalidateCaps() {

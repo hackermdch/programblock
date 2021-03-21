@@ -1,7 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import com.hacker.programblock.mixin.accessor.WorldAccessor;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
@@ -135,16 +134,16 @@ public class World implements IProxy<net.minecraft.world.World> {
         return target.isNightTime();
     }
 
-    public void playSound(@Nullable PlayerEntity player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
-        target.playSound(player, pos.getTarget(), soundIn.getTarget(), category.getTarget(), volume, pitch);
+    public void playSound(@Nullable Player player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
+        target.playSound(player != null ? player.getTarget() : null, pos.getTarget(), soundIn.getTarget(), category.getTarget(), volume, pitch);
     }
 
-    public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
-        target.playSound(player, x, y, z, soundIn.getTarget(), category.getTarget(), volume, pitch);
+    public void playSound(@Nullable Player player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
+        target.playSound(player != null ? player.getTarget() : null, x, y, z, soundIn.getTarget(), category.getTarget(), volume, pitch);
     }
 
-    public void playMovingSound(@Nullable PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn, float volume, float pitch) {
-        target.playMovingSound(playerIn, entityIn.getTarget(), eventIn.getTarget(), categoryIn.getTarget(), volume, pitch);
+    public void playMovingSound(@Nullable Player player, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn, float volume, float pitch) {
+        target.playMovingSound(player != null ? player.getTarget() : null, entityIn.getTarget(), eventIn.getTarget(), categoryIn.getTarget(), volume, pitch);
     }
 
     public void playSound(double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch, boolean distanceDelay) {
@@ -263,8 +262,8 @@ public class World implements IProxy<net.minecraft.world.World> {
         return target.getDayTime();
     }
 
-    public boolean isBlockModifiable(PlayerEntity player, BlockPos pos) {
-        return target.isBlockModifiable(player, pos.getTarget());
+    public boolean isBlockModifiable(Player player, BlockPos pos) {
+        return target.isBlockModifiable(player.getTarget(), pos.getTarget());
     }
 
     public void setEntityState(Entity entityIn, byte state) {

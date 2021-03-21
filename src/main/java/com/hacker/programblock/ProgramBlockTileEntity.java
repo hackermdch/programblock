@@ -77,14 +77,15 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 Thread t = new Thread(c);
                 t.setDaemon(true);
                 t.setUncaughtExceptionHandler((th, e) -> {
-                    for (ServerPlayerEntity player : Objects.requireNonNull(world.getServer()).getPlayerList().getPlayers()) {
-                        if (player.hasPermissionLevel(2)) {
-                            player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), pos));
-                            for (StackTraceElement se : e.getStackTrace()) {
-                                player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                    if (!(e instanceof ThreadDeath))
+                        for (ServerPlayerEntity player : Objects.requireNonNull(world.getServer()).getPlayerList().getPlayers()) {
+                            if (player.hasPermissionLevel(2)) {
+                                player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), String.format("x=%d,y=%d,z=%d", pos.getX(), pos.getY(), pos.getZ())));
+                                for (StackTraceElement se : e.getStackTrace()) {
+                                    player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                                }
                             }
                         }
-                    }
                 });
                 setThreadInPos(pos, t);
                 t.start();
@@ -96,7 +97,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
             assert world != null;
             for (ServerPlayerEntity player : Objects.requireNonNull(world.getServer()).getPlayerList().getPlayers()) {
                 if (player.hasPermissionLevel(2)) {
-                    player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), pos));
+                    player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), String.format("x=%d,y=%d,z=%d", pos.getX(), pos.getY(), pos.getZ())));
                     for (StackTraceElement se : e.getStackTrace()) {
                         player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
                     }

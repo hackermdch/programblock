@@ -7,8 +7,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.storage.MapData;
@@ -138,19 +136,19 @@ public class World implements IProxy<net.minecraft.world.World> {
     }
 
     public void playSound(@Nullable PlayerEntity player, BlockPos pos, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
-        target.playSound(player, pos.getTarget(), soundIn, category, volume, pitch);
+        target.playSound(player, pos.getTarget(), soundIn.getTarget(), category.getTarget(), volume, pitch);
     }
 
     public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
-        target.playSound(player, x, y, z, soundIn, category, volume, pitch);
+        target.playSound(player, x, y, z, soundIn.getTarget(), category.getTarget(), volume, pitch);
     }
 
     public void playMovingSound(@Nullable PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn, float volume, float pitch) {
-        target.playMovingSound(playerIn, entityIn.getTarget(), eventIn, categoryIn, volume, pitch);
+        target.playMovingSound(playerIn, entityIn.getTarget(), eventIn.getTarget(), categoryIn.getTarget(), volume, pitch);
     }
 
     public void playSound(double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch, boolean distanceDelay) {
-        target.playSound(x, y, z, soundIn, category, volume, pitch, distanceDelay);
+        target.playSound(x, y, z, soundIn.getTarget(), category.getTarget(), volume, pitch, distanceDelay);
     }
 
     public void addParticle(IParticleData particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {

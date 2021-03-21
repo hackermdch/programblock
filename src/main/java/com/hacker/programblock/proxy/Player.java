@@ -15,7 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stat;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
@@ -86,11 +85,11 @@ public class Player extends LivingEntity {
     }
 
     public void playSound(SoundEvent soundIn, float volume, float pitch) {
-        target.playSound(soundIn, volume, pitch);
+        target.playSound(soundIn.getTarget(), volume, pitch);
     }
 
     public void playSound(SoundEvent p_213823_1_, SoundCategory p_213823_2_, float p_213823_3_, float p_213823_4_) {
-        target.playSound(p_213823_1_, p_213823_2_, p_213823_3_, p_213823_4_);
+        target.playSound(p_213823_1_.getTarget(), p_213823_2_.getTarget(), p_213823_3_, p_213823_4_);
     }
 
     protected int getFireImmuneTicks() {

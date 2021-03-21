@@ -21,7 +21,6 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -277,7 +276,7 @@ public class Entity implements IProxy<net.minecraft.entity.Entity> {
     }
 
     public void playSound(SoundEvent soundIn, float volume, float pitch) {
-        target.playSound(soundIn, volume, pitch);
+        target.playSound(soundIn.getTarget(), volume, pitch);
     }
 
     public boolean isSilent() {

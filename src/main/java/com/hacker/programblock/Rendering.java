@@ -63,7 +63,7 @@ class Rendering {
         glDeleteShader(ps);
     }
 
-    private static void begin() {
+    public static void begin() {
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glPushMatrix();
         glEnable(GL_MULTISAMPLE);
@@ -72,7 +72,7 @@ class Rendering {
         glUseProgram(program);
     }
 
-    private static void end() {
+    public static void end() {
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glUseProgram(0);
@@ -81,7 +81,6 @@ class Rendering {
     }
 
     public static void draw(float[] vertices, int[] indexs) {
-        begin();
         int vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
@@ -96,8 +95,22 @@ class Rendering {
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
         glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        end();
+        glDrawElements(GL_TRIANGLES, indexs.length, GL_UNSIGNED_INT, 0);
+    }
+
+    public static void draw(int mode, float[] vertices) {
+        int vbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        int vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 28, 0);
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
+        glBindVertexArray(vao);
+        glDrawArrays(mode, 0, vertices.length);
     }
 
     public static void drawRect(float x, float y, float width, float height, float[] colors) {
@@ -110,7 +123,7 @@ class Rendering {
             };
         float[] vertices = {
                 x + width, y, 0.0f, colors[0], colors[1], colors[2], colors[3],
-                y, y + height, 0.0f, colors[4], colors[5], colors[6], colors[7],
+                x, y + height, 0.0f, colors[4], colors[5], colors[6], colors[7],
                 x + width, y + height, 0.0f, colors[8], colors[9], colors[10], colors[11],
                 x, y, 0f, colors[12], colors[13], colors[14], colors[15],
         };

@@ -136,7 +136,9 @@ public class ProgramBlockScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        Rendering.begin();
         Rendering.drawRect(0, 0, 1922, 1080, bg);
+        Rendering.end();
         codes.render(matrixStack, mouseX, mouseY, partialTicks);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

@@ -1,7 +1,6 @@
 package com.hacker.programblock.proxy;
 
 import com.hacker.programblock.mixin.accessor.AbstractBlockAccessor;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItemUseContext;
@@ -107,16 +106,16 @@ public class AbstractBlock implements IProxy<net.minecraft.block.AbstractBlock> 
         target.tick(state.getTarget(), worldIn, pos.getTarget(), rand);
     }
 
-    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        return target.getPlayerRelativeBlockHardness(state.getTarget(), player, worldIn, pos.getTarget());
+    public float getPlayerRelativeBlockHardness(BlockState state, Player player, IBlockReader worldIn, BlockPos pos) {
+        return target.getPlayerRelativeBlockHardness(state.getTarget(), player.getTarget(), worldIn, pos.getTarget());
     }
 
     public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
         target.spawnAdditionalDrops(state.getTarget(), worldIn, pos.getTarget(), stack);
     }
 
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        target.onBlockClicked(state.getTarget(), worldIn.getTarget(), pos.getTarget(), player);
+    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, Player player) {
+        target.onBlockClicked(state.getTarget(), worldIn.getTarget(), pos.getTarget(), player.getTarget());
     }
 
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {

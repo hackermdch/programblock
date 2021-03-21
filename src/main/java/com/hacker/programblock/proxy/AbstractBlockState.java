@@ -2,7 +2,6 @@ package com.hacker.programblock.proxy;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItemUseContext;
@@ -101,8 +100,8 @@ public class AbstractBlockState implements IProxy<AbstractBlock.AbstractBlockSta
         return target.getBlockHardness(worldIn, pos.getTarget());
     }
 
-    public float getPlayerRelativeBlockHardness(PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
-        return target.getPlayerRelativeBlockHardness(player, worldIn, pos.getTarget());
+    public float getPlayerRelativeBlockHardness(Player player, IBlockReader worldIn, BlockPos pos) {
+        return target.getPlayerRelativeBlockHardness(player.getTarget(), worldIn, pos.getTarget());
     }
 
     public int getStrongPower(IBlockReader blockAccess, BlockPos pos, Direction side) {
@@ -177,8 +176,8 @@ public class AbstractBlockState implements IProxy<AbstractBlock.AbstractBlockSta
         target.spawnAdditionalDrops(worldIn, pos.getTarget(), stack);
     }
 
-    public void onBlockClicked(World worldIn, BlockPos pos, PlayerEntity player) {
-        target.onBlockClicked(worldIn.getTarget(), pos.getTarget(), player);
+    public void onBlockClicked(World worldIn, BlockPos pos, Player player) {
+        target.onBlockClicked(worldIn.getTarget(), pos.getTarget(), player.getTarget());
     }
 
     public boolean isSuffocating(IBlockReader blockReaderIn, BlockPos blockPosIn) {

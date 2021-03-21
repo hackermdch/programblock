@@ -3,7 +3,6 @@ package com.hacker.programblock.proxy;
 import com.hacker.programblock.mixin.accessor.BlockAccessor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
@@ -83,8 +82,8 @@ public class Block extends AbstractBlock {
         target.onEntityWalk(worldIn.getTarget(), pos.getTarget(), entityIn.getTarget());
     }
 
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
-        target.harvestBlock(worldIn.getTarget(), player, pos.getTarget(), state.getTarget(), te, stack);
+    public void harvestBlock(World worldIn, Player player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        target.harvestBlock(worldIn.getTarget(), player.getTarget(), pos.getTarget(), state.getTarget(), te, stack);
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
@@ -119,8 +118,8 @@ public class Block extends AbstractBlock {
         return target.getJumpFactor();
     }
 
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        target.onBlockHarvested(worldIn.getTarget(), pos.getTarget(), state.getTarget(), player);
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, Player player) {
+        target.onBlockHarvested(worldIn.getTarget(), pos.getTarget(), state.getTarget(), player.getTarget());
     }
 
     public void fillWithRain(World worldIn, BlockPos pos) {

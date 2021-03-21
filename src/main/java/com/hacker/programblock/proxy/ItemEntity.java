@@ -11,6 +11,16 @@ public class ItemEntity extends Entity {
         setTarget(target);
     }
 
+    public ItemEntity(World worldIn, double x, double y, double z) {
+        target = new net.minecraft.entity.item.ItemEntity(worldIn.getTarget(), x, y, z);
+        setTarget(target);
+    }
+
+    public ItemEntity(World worldIn, double x, double y, double z, ItemStack stack) {
+        target = new net.minecraft.entity.item.ItemEntity(worldIn.getTarget(), x, y, z, stack.getTarget());
+        setTarget(target);
+    }
+
     @Nonnull
     @Override
     public net.minecraft.entity.item.ItemEntity getTarget() {

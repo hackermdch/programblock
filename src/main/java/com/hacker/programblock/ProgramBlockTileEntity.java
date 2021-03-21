@@ -76,6 +76,16 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 c.callback = callback;
                 Thread t = new Thread(c);
                 t.setDaemon(true);
+                t.setUncaughtExceptionHandler((th, e) -> {
+                    for (ServerPlayerEntity player : Objects.requireNonNull(world.getServer()).getPlayerList().getPlayers()) {
+                        if (player.hasPermissionLevel(2)) {
+                            player.getCommandSource().sendErrorMessage(new TranslationTextComponent("program.runtime_error", e.toString(), pos));
+                            for (StackTraceElement se : e.getStackTrace()) {
+                                player.getCommandSource().sendErrorMessage(new StringTextComponent(se.toString()));
+                            }
+                        }
+                    }
+                });
                 setThreadInPos(pos, t);
                 t.start();
             } else {
@@ -213,7 +223,7 @@ public final class ProgramBlockTileEntity extends TileEntity {
                 "import com.hacker.programblock.proxy.*;\n" +
                 "import java.util.*;\n" +
                 "import java.math.*;\n" +
-                "import java.text.*;\n"+
+                "import java.text.*;\n" +
                 "import com.hacker.programblock.ProgramFunction;\n" +
                 "import static com.hacker.programblock.ProgramUtils.*;\n" +
                 "class " + getClassName() + " implements ProgramFunction {\n" +

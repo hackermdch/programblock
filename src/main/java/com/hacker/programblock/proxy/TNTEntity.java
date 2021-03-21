@@ -15,7 +15,7 @@ public class TNTEntity extends Entity {
     }
 
     public TNTEntity(World worldIn, double x, double y, double z, @Nullable LivingEntity igniter) {
-        target = new CustomTNT(worldIn.getTarget(), x, y, z, igniter.getTarget());
+        target = new CustomTNT(worldIn.getTarget(), x, y, z, igniter != null ? igniter.getTarget() : null);
         setTarget(target);
     }
 

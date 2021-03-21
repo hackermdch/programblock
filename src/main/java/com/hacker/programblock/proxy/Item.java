@@ -2,12 +2,9 @@ package com.hacker.programblock.proxy;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 
@@ -23,6 +20,10 @@ public class Item implements IProxy<net.minecraft.item.Item> {
         this.target = target;
     }
 
+    public ItemStack stack() {
+        return new ItemStack(this);
+    }
+
     @Nonnull
     @Override
     public net.minecraft.item.Item getTarget() {
@@ -30,7 +31,7 @@ public class Item implements IProxy<net.minecraft.item.Item> {
     }
 
     public void onUse(World worldIn, LivingEntity livingEntityIn, ItemStack stack, int count) {
-        target.onUse(worldIn.getTarget(), livingEntityIn.getTarget(), stack, count);
+        target.onUse(worldIn.getTarget(), livingEntityIn.getTarget(), stack.getTarget(), count);
     }
 
     public boolean updateItemStackNBT(CompoundNBT nbt) {
@@ -42,7 +43,7 @@ public class Item implements IProxy<net.minecraft.item.Item> {
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return target.getDestroySpeed(stack, state.getTarget());
+        return target.getDestroySpeed(stack.getTarget(), state.getTarget());
     }
 
     public final int getMaxStackSize() {
@@ -58,11 +59,11 @@ public class Item implements IProxy<net.minecraft.item.Item> {
     }
 
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        return this.target.hitEntity(stack, target.getTarget(), attacker.getTarget());
+        return this.target.hitEntity(stack.getTarget(), target.getTarget(), attacker.getTarget());
     }
 
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        return target.onBlockDestroyed(stack, worldIn.getTarget(), state.getTarget(), pos.getTarget(), entityLiving.getTarget());
+        return target.onBlockDestroyed(stack.getTarget(), worldIn.getTarget(), state.getTarget(), pos.getTarget(), entityLiving.getTarget());
     }
 
     public int getId() {
@@ -87,11 +88,11 @@ public class Item implements IProxy<net.minecraft.item.Item> {
     }
 
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        target.inventoryTick(stack, worldIn.getTarget(), entityIn.getTarget(), itemSlot, isSelected);
+        target.inventoryTick(stack.getTarget(), worldIn.getTarget(), entityIn.getTarget(), itemSlot, isSelected);
     }
 
     public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        target.onCreated(stack, worldIn.getTarget(), playerIn);
+        target.onCreated(stack.getTarget(), worldIn.getTarget(), playerIn);
     }
 
     public boolean isComplex() {
@@ -99,47 +100,43 @@ public class Item implements IProxy<net.minecraft.item.Item> {
     }
 
     public int getUseDuration(ItemStack stack) {
-        return target.getUseDuration(stack);
+        return target.getUseDuration(stack.getTarget());
     }
 
     public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-        target.onPlayerStoppedUsing(stack, worldIn.getTarget(), entityLiving.getTarget(), timeLeft);
+        target.onPlayerStoppedUsing(stack.getTarget(), worldIn.getTarget(), entityLiving.getTarget(), timeLeft);
     }
 
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        target.addInformation(stack, worldIn.getTarget(), tooltip, flagIn);
+        target.addInformation(stack.getTarget(), worldIn.getTarget(), tooltip, flagIn);
     }
 
     public boolean hasEffect(ItemStack stack) {
-        return target.hasEffect(stack);
+        return target.hasEffect(stack.getTarget());
     }
 
     public boolean isEnchantable(ItemStack stack) {
-        return target.isEnchantable(stack);
+        return target.isEnchantable(stack.getTarget());
     }
 
     public int getItemEnchantability() {
         return target.getItemEnchantability();
     }
 
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        target.fillItemGroup(group, items);
-    }
-
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return target.getIsRepairable(toRepair, repair);
+        return target.getIsRepairable(toRepair.getTarget(), repair.getTarget());
     }
 
     public boolean isRepairable(ItemStack stack) {
-        return target.isRepairable(stack);
+        return target.isRepairable(stack.getTarget());
     }
 
     public int getHarvestLevel(ItemStack stack, net.minecraftforge.common.ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
-        return target.getHarvestLevel(stack, tool, player, blockState.getTarget());
+        return target.getHarvestLevel(stack.getTarget(), tool, player, blockState.getTarget());
     }
 
     public boolean isCrossbow(ItemStack stack) {
-        return target.isCrossbow(stack);
+        return target.isCrossbow(stack.getTarget());
     }
 
     public boolean isIn(ITag<net.minecraft.item.Item> tagIn) {

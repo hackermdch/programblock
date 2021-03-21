@@ -4,6 +4,7 @@
   "plugin": "com.hacker.programblock.MixinPlugin",
   "minVersion": "0.8",
   "mixins": [
+    "BlockTagsProviderMixin",
     "accessor.AbstractBlockAccessor",
     "accessor.EntityAccessor",
     "accessor.LivingEntityAccessor",

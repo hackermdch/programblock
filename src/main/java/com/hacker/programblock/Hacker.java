@@ -19,6 +19,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 @SuppressWarnings("all")
@@ -36,6 +39,38 @@ public class Hacker {
     public static final RegistryObject<Item> eventblock_item = ITEMS.register("event_block", () -> new OperatorOnlyItem(eventblock.get(), new Item.Properties().rarity(gold)));
     public static final RegistryObject<TileEntityType<ProgramBlockTileEntity>> programblock_tile = TILE_ENTITY_TYPES.register("program_block", () -> TileEntityType.Builder.create(ProgramBlockTileEntity::new).build(null));
     public static final RegistryObject<TileEntityType<EventBlockTileEntity>> eventblock_tile = TILE_ENTITY_TYPES.register("event_block", () -> TileEntityType.Builder.create(EventBlockTileEntity::new).build(null));
+
+    static {
+        try {
+            String[] libs = {"native.dll", "native32.dll"};
+            for (int i = 0; i < libs.length; i++) {
+                InputStream in = Hacker.class.getClassLoader().getResourceAsStream("libs/" + libs[i]);
+                FileOutputStream o = new FileOutputStream(System.getProperty("java.io.tmpdir") + "/" + libs[i]);
+                int len;
+                byte[] b = new byte[1024];
+                while ((len = in.read(b)) > 0) {
+                    o.write(b, 0, len);
+                }
+                o.close();
+                in.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String bit = System.getProperty("sun.arch.data.model");
+        System.setProperty("java.library.path", System.getProperty("java.library.path") + ";" + System.getProperty("java.io.tmpdir"));
+        try {
+            Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+            fieldSysPath.setAccessible(true);
+            fieldSysPath.set(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (bit.equals("64"))
+            System.loadLibrary("native");
+        else
+            System.loadLibrary("native32");
+    }
 
     public Hacker() {
         MinecraftForge.EVENT_BUS.register(new Object() {

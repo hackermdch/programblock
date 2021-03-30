@@ -2,6 +2,8 @@ package com.hacker.programblock;
 
 import org.apache.logging.log4j.LogManager;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.lwjgl.opengl.GL33.*;
 
 class Rendering {
@@ -111,6 +113,11 @@ class Rendering {
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 28, 12);
         glBindVertexArray(vao);
         glDrawArrays(mode, 0, vertices.length);
+    }
+
+    public static void drawText(String text, float x, float y, int size, float r, float g, float b) {
+        RenderingC.drawText(new String(text.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8), x, y, size, r, g, b);
+        glUseProgram(program);
     }
 
     public static void drawRect(float x, float y, float width, float height, float[] colors) {

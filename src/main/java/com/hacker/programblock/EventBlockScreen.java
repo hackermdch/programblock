@@ -25,7 +25,7 @@ public class EventBlockScreen extends Screen {
         Rendering.drawRect(0, 0, 1922, 1080, bg);
         Rendering.drawRect(0, 100, 200, 200, null);
         Rendering.drawText("hello world", 200, 0, 1, 1, 0, 0);
-        Rendering.drawText("hello world", 500, 0, -3, 1, 0, 0);
+        Rendering.drawText("hello world你妈$了", 500, 0, -3, 1, 0, 0);
         Rendering.drawText("hello world", 200, 100, 2, 1, 0, 1);
         Rendering.drawText("hello world opengjlfikl", 0, 300, 3, 1, 0, 0);
         Rendering.drawText("hello world opengjlfikl", 0, 450, 4, 1, 0, 0);

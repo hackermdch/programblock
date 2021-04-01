@@ -42,7 +42,7 @@ public class Hacker {
 
     static {
         try {
-            String[] libs = {"native.dll", "native32.dll"};
+            String[] libs = {"native.dll", "native32.dll", "native.so"};
             for (int i = 0; i < libs.length; i++) {
                 InputStream in = Hacker.class.getClassLoader().getResourceAsStream("libs/" + libs[i]);
                 FileOutputStream o = new FileOutputStream(System.getProperty("java.io.tmpdir") + "/" + libs[i]);

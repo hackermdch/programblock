@@ -8,9 +8,9 @@ import static org.lwjgl.opengl.GL33.*;
 
 class Rendering {
     private static final int program;
-    private static final String vsc = "#version 330 core\n" +
-            "layout (location = 0) in vec3 aPos;\n" +
-            "layout (location = 1) in vec4 color;\n" +
+    private static final String vsc = "#version 140\n" +
+            "in vec3 aPos;\n" +
+            "in vec4 color;\n" +
             "out vec4 ourColor;\n" +
             "const float w = 960;\n" +
             "const float h = 540;\n" +
@@ -25,7 +25,7 @@ class Rendering {
             "   ourColor = color;\n" +
             "}";
 
-    private static final String psc = " #version 330 core\n" +
+    private static final String psc = " #version 140\n" +
             "in vec4 ourColor;\n" +
             "out vec4 FragColor;\n" +
             "void main()\n" +

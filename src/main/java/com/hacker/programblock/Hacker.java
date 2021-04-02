@@ -18,8 +18,11 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -40,9 +43,32 @@ public class Hacker {
     public static final RegistryObject<TileEntityType<ProgramBlockTileEntity>> programblock_tile = TILE_ENTITY_TYPES.register("program_block", () -> TileEntityType.Builder.create(ProgramBlockTileEntity::new).build(null));
     public static final RegistryObject<TileEntityType<EventBlockTileEntity>> eventblock_tile = TILE_ENTITY_TYPES.register("event_block", () -> TileEntityType.Builder.create(EventBlockTileEntity::new).build(null));
 
+    private static void addLibraryDir(String libraryPath) throws IOException {
+        try {
+            Field field = ClassLoader.class.getDeclaredField("usr_paths");
+            field.setAccessible(true);
+            String[] paths = (String[]) field.get(null);
+            for (int i = 0; i < paths.length; i++) {
+                if (libraryPath.equals(paths[i])) {
+                    return;
+                }
+            }
+            String[] tmp = new String[paths.length + 1];
+            System.arraycopy(paths, 0, tmp, 0, paths.length);
+            tmp[paths.length] = libraryPath;
+            field.set(null, tmp);
+        } catch (IllegalAccessException e) {
+            throw new IOException(
+                    "Failedto get permissions to set library path");
+        } catch (NoSuchFieldException e) {
+            throw new IOException(
+                    "Failedto get field handle to set library path");
+        }
+    }
+
     static {
         try {
-            String[] libs = {"native.dll", "native32.dll", "native.so"};
+            String[] libs = {"native.dll", "native32.dll", "libnative.so"};
             for (int i = 0; i < libs.length; i++) {
                 InputStream in = Hacker.class.getClassLoader().getResourceAsStream("libs/" + libs[i]);
                 FileOutputStream o = new FileOutputStream(System.getProperty("java.io.tmpdir") + "/" + libs[i]);
@@ -58,19 +84,20 @@ public class Hacker {
             e.printStackTrace();
         }
         String bit = System.getProperty("sun.arch.data.model");
-        System.setProperty("java.library.path", System.getProperty("java.library.path") + ";" + System.getProperty("java.io.tmpdir"));
         try {
-            Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-            fieldSysPath.setAccessible(true);
-            fieldSysPath.set(null, null);
-        } catch (Exception e) {
+            addLibraryDir(System.getProperty("java.io.tmpdir"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        if (bit.equals("64"))
+        if (bit.equals("64")) {
             System.loadLibrary("native");
-        else
+        } else {
             System.loadLibrary("native32");
+        }
+        load(GLFW.Functions.GetProcAddress);
     }
+
+    private static native void load(long address);
 
     public Hacker() {
         MinecraftForge.EVENT_BUS.register(new Object() {
